@@ -157,7 +157,7 @@
       <section id="urgent" class="section" style="background:var(--bg-soft);border:1px solid var(--border);border-radius:12px;padding:16px">
         <h2>Pengumuman Penting</h2>
         <div class="cards">
-          <article class="card"><h3>Perubahan Lokasi Kajian</h3><p class="muted">Pindah ke Masjid Otsuka Lt. 2 — mohon hadir 10 menit lebih awal.</p></article>
+          <article class="card"><h3>Perubahan Lokasi Kajian</h3><p class="muted">Kajian ustadz Yusril di Masjid As-Sunnah Hekinan — mohon hadir 10 menit lebih awal.</p></article>
           <article class="card"><h3>Kebutuhan Relawan</h3><p class="muted">Butuh 6 orang untuk dokumentasi & kebersihan. Hubungi panitia.</p></article>
         </div>
       </section>
@@ -212,66 +212,95 @@
     }
 
     /* ==========================
-       GOOGLE DRIVE SLIDESHOW
+       GOOGLE DRIVE SLIDESHOW (fix)
        ========================== */
-    const GOOGLE_API_KEY  = "AIzaSyC9Xi2J5SzGLf8gOfGyehx9NopSTYfBpdg";  // API key kamu
-    const DRIVE_FOLDER_ID = "1h4e5PnAqmYS86GsxQiqcNA4Vh73jgZzQ";         // Folder ID kamu
-    const MAX_IMAGES      = 20;
+    const GOOGLE_API_KEY  = "AIzaSyC9Xi2J5SzGLf8gOfGyehx9NopSTYfBpdg";  // key kamu
+    const DRIVE_FOLDER_ID = "1h4e5PnAqmYS86GsxQiqcNA4Vh73jgZzQ";         // folder kamu
+    const MAX_IMAGES      = 100;
     const CACHE_TTL_MS    = 10 * 60 * 1000;
 
-    const DRIVE_LIST_URL = () => {
-      const q = `'${DRIVE_FOLDER_ID}' in parents and mimeType contains 'image/' and trashed=false`;
-      const params = new URLSearchParams({
-        q,
-        orderBy: 'modifiedTime desc',
-        fields: 'files(id,name,modifiedTime)',
-        pageSize: String(MAX_IMAGES),
-        key: GOOGLE_API_KEY
-      });
-      return `https://www.googleapis.com/drive/v3/files?${params.toString()}`;
-    };
     const toViewUrl = id => `https://drive.google.com/uc?export=view&id=${id}`;
+    const qs = p => new URLSearchParams(p).toString();
 
-    async function fetchDriveImages() {
-      const CK = 'jm-drive-cache';
-      try {
-        const raw = localStorage.getItem(CK);
-        if (raw) {
-          const {ts, files} = JSON.parse(raw);
-          if (Date.now() - ts < CACHE_TTL_MS && Array.isArray(files) && files.length) {
-            return files;
-          }
+    async function listFolderFiles(pageToken=""){
+      const query = `'${DRIVE_FOLDER_ID}' in parents and trashed=false and (mimeType contains 'image/' or mimeType='application/vnd.google-apps.shortcut')`;
+      const url = `https://www.googleapis.com/drive/v3/files?${qs({
+        q: query,
+        orderBy: 'modifiedTime desc',
+        fields: 'nextPageToken, files(id,name,mimeType,modifiedTime,shortcutDetails)',
+        pageSize: String(MAX_IMAGES),
+        pageToken,
+        key: GOOGLE_API_KEY
+      })}`;
+      const res = await fetch(url);
+      if(!res.ok){
+        const txt = await res.text().catch(()=>res.statusText);
+        throw new Error(`Drive API list error ${res.status}: ${txt}`);
+      }
+      return res.json();
+    }
+
+    function resolveShortcuts(files){
+      return files.map(f=>{
+        if(f.mimeType === 'application/vnd.google-apps.shortcut' && f.shortcutDetails && f.shortcutDetails.targetId){
+          return {
+            id: f.shortcutDetails.targetId,
+            name: f.name,
+            mimeType: 'image/unknown',
+            modifiedTime: f.modifiedTime
+          };
         }
-      } catch(_) {}
+        return f;
+      });
+    }
 
-      const res = await fetch(DRIVE_LIST_URL());
-      if (!res.ok) throw new Error('Drive API error: ' + res.status);
-      const data = await res.json();
-      const files = (data.files || []).map(f => ({
+    async function fetchDriveImages(){
+      const CK='jm-drive-cache-v2';
+      try{
+        const raw = localStorage.getItem(CK);
+        if(raw){
+          const {ts, files} = JSON.parse(raw);
+          if(Date.now()-ts < CACHE_TTL_MS && Array.isArray(files) && files.length) return files;
+        }
+      }catch(_){}
+
+      let all = [];
+      let token = "";
+      do{
+        const data = await listFolderFiles(token);
+        const resolved = resolveShortcuts(data.files || []);
+        const imgs = resolved.filter(f => (f.mimeType||'').startsWith('image/') || !f.mimeType);
+        all = all.concat(imgs);
+        token = data.nextPageToken || "";
+      }while(token && all.length < MAX_IMAGES);
+
+      const files = all.slice(0, MAX_IMAGES).map(f=>({
         id: f.id,
         name: f.name,
         url: toViewUrl(f.id),
         modifiedTime: f.modifiedTime
       }));
-      try { localStorage.setItem('jm-drive-cache', JSON.stringify({ts: Date.now(), files})); } catch(_){}
+
+      try{ localStorage.setItem(CK, JSON.stringify({ts: Date.now(), files})); }catch(_){}
       return files;
     }
 
-    async function initSlideshow() {
+    async function initSlideshow(){
       const track = document.getElementById('track');
       const dots  = document.getElementById('dots');
       const nextB = document.getElementById('next');
       const prevB = document.getElementById('prev');
-      if (!track || !dots) return;
+      if(!track || !dots) return;
 
       let files = [];
-      try {
+      try{
         files = await fetchDriveImages();
-      } catch (e) {
-        console.warn(e);
+      }catch(e){
+        console.error('[JM] Drive error:', e);
       }
-      if (!files.length) {
-        files = [{url:'jm.jpeg', name:'Jepang Mengaji'}, {url:'jm.jpeg', name:'Jepang Mengaji'}];
+      if(!files.length){
+        console.warn('[JM] Tidak menemukan gambar di folder (cek permission & isi folder).');
+        files = [{url:'jm.jpeg', name:'Jepang Mengaji'}];
       }
 
       track.innerHTML = '';
@@ -285,7 +314,7 @@
         track.appendChild(fig);
       });
 
-      dots.innerHTML = '';
+      dots.innerHTML='';
       files.forEach((_,i)=>{
         const b=document.createElement('button');
         b.className='dot'+(i===0?' active':'');
@@ -301,10 +330,7 @@
         [...dots.children].forEach((d,di)=>d.classList.toggle('active', di===i));
       }
       function go(i,user){
-        const n=slides.length;
-        idx=(i+n)%n;
-        show(idx);
-        if(user) restart();
+        const n=slides.length; idx=(i+n)%n; show(idx); if(user) restart();
       }
       function next(){ go(idx+1,false); }
       function prev(){ go(idx-1,true); }
@@ -323,7 +349,6 @@
     /* ==========================
        INFO TERBARU from Google Sheets
        ========================== */
-    // Pakai URL lama (CSV publish):
     const INFO_CSV_URL =
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
 
