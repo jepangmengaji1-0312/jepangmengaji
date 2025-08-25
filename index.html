@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jepang Mengaji — Beranda</title>
-  <meta name="description" content="Beranda Jepang Mengaji: slideshow kegiatan (Google Drive), info terbaru, pengumuman penting, donasi & konfirmasi transfer.">
+  <meta name="description" content="Beranda Jepang Mengaji: slideshow kegiatan (Google Drive), info terbaru (Google Sheets), donasi & konfirmasi transfer.">
   <link rel="icon" href="jm.jpeg" />
   <style>
     :root{
@@ -57,17 +57,17 @@
     /* SECTIONS */
     .section{padding:18px 0}
     .section h2{margin:0 0 10px}
-    .updates{border:1px solid var(--border);border-radius:12px;overflow:hidden}
-    .updates li{list-style:none;display:flex;gap:12px;border-top:1px solid var(--border);padding:12px}
-    .updates li:first-child{border-top:none}
-    .badge{display:inline-block;font-size:12px;border:1px solid var(--border);border-radius:999px;padding:2px 8px;background:#fff}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
     .muted{color:var(--muted)}
+    .updates{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:820px){.updates{grid-template-columns:repeat(3,1fr)}}
+
     footer{border-top:1px solid var(--border);padding:26px 0 40px;color:var(--muted)}
     .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .copy{font-size:.85rem;padding:.25rem .5rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-soft)}
+    input.btn, select.btn{background:#fff}
   </style>
 </head>
 <body>
@@ -78,7 +78,7 @@
       <div class="nav-links">
         <a class="btn ghost" href="#updates">Info Terbaru</a>
         <a class="btn ghost" href="#urgent">Penting</a>
-        <a class="btn ghost" href="donasi.html">Donasi</a>
+        <a class="btn ghost" href="#donasi">Donasi</a>
         <a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Arsip YouTube</a>
       </div>
     </div>
@@ -91,7 +91,7 @@
         <h3>Navigasi</h3>
         <a href="#updates">🆕 Info Terbaru</a>
         <a href="#urgent">⚠️ Pengumuman Penting</a>
-        <a href="donasi.html">❤️ Donasi</a>
+        <a href="#donasi">❤️ Donasi & Konfirmasi</a>
         <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
         <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
         <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO?mode=ac_t" target="_blank" rel="noopener">📲 WhatsApp Group</a>
@@ -110,59 +110,47 @@
             <div class="dots" id="dots"></div>
           </div>
         </div>
+      </section>
 
-        <div class="section" style="padding:12px 0 0">
-          <div class="cards">
-            <div class="card">
-              <h3>❤️ Donasi Kegiatan</h3>
-              <p class="muted">Dukung dakwah: operasional, dokumentasi, dan penyelenggaraan kajian.</p>
-              <ul class="muted" style="line-height:1.7;margin:.4rem 0">
-                <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> — <strong id="rek-jenius">90220139952</strong> <button class="copy" data-copy="#rek-jenius">Salin</button></li>
-                <li>Yucho Ginko a.n. <em>トリサンボド</em> — <strong id="rek-yucho">14660-20688191</strong> <button class="copy" data-copy="#rek-yucho">Salin</button></li>
-              </ul>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-                <a class="btn primary" href="donasi.html">💳 Link Donasi</a>
-                <a class="btn" href="instruksi-transfer.pdf" target="_blank" rel="noopener">📄 Instruksi Transfer</a>
-                <a class="btn" href="#konfirmasi">✅ Konfirmasi Transfer</a>
-              </div>
+      <!-- DONASI & KONFIRMASI -->
+      <section id="donasi" class="section">
+        <div class="cards">
+          <div class="card">
+            <h3>❤️ Donasi Kegiatan</h3>
+            <p class="muted">Dukung dakwah: operasional, dokumentasi, dan penyelenggaraan kajian.</p>
+            <ul class="muted" style="line-height:1.7;margin:.4rem 0">
+              <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> — <strong id="rek-jenius">90220139952</strong> <button class="copy" data-copy="#rek-jenius">Salin</button></li>
+              <li>Yucho Ginko a.n. <em>トリサンボド</em> — <strong id="rek-yucho">14660-20688191</strong> <button class="copy" data-copy="#rek-yucho">Salin</button></li>
+            </ul>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+              <a class="btn" href="#konfirmasi">✅ Konfirmasi Transfer</a>
+              <a class="btn" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
             </div>
-            <div class="card" id="konfirmasi">
-              <h3>✅ Konfirmasi Transfer</h3>
-              <p class="muted">Kirim format singkat via WhatsApp atau Email (otomatis tersusun).</p>
-              <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr">
-                <input class="btn" id="kf-nama" placeholder="Nama" style="border-radius:8px;border:1px solid var(--border)"/>
-                <input class="btn" id="kf-nominal" placeholder="Nominal (cth 100000)" style="border-radius:8px;border:1px solid var(--border)"/>
-                <input class="btn" id="kf-tanggal" type="date" style="border-radius:8px;border:1px solid var(--border)"/>
-                <select class="btn" id="kf-bank" style="border-radius:8px;border:1px solid var(--border)">
-                  <option value="">Transfer ke</option><option>SMBC / Jenius</option><option>Yucho</option>
-                </select>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-                <button class="btn primary" id="btnWA">Kirim via WhatsApp</button>
-                <a class="btn" id="btnEmail" href="#">Kirim via Email</a>
-              </div>
+          </div>
+
+          <div class="card" id="konfirmasi">
+            <h3>✅ Konfirmasi Transfer</h3>
+            <p class="muted">Kirim format singkat via WhatsApp atau Email (otomatis tersusun).</p>
+            <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr">
+              <input class="btn" id="kf-nama" placeholder="Nama"/>
+              <input class="btn" id="kf-nominal" placeholder="Nominal (cth 100000)"/>
+              <input class="btn" id="kf-tanggal" type="date"/>
+              <select class="btn" id="kf-bank">
+                <option value="">Transfer ke</option><option>SMBC / Jenius</option><option>Yucho</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <button class="btn primary" id="btnWA">Kirim via WhatsApp</button>
+              <a class="btn" id="btnEmail" href="#">Kirim via Email</a>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- UPDATE INFO TERBARU -->
+      <!-- INFO TERBARU (Google Sheets) -->
       <section id="updates" class="section">
         <h2>Info Terbaru</h2>
-        <ul class="updates" id="updatesList">
-          <li>
-            <span class="badge">25 Agu</span>
-            <div><a href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Live malam ini 19:30 JST — Tafsir Juz 30</a><div class="muted">Channel Jepang Mengaji</div></div>
-          </li>
-          <li>
-            <span class="badge">24 Agu</span>
-            <div><a href="donasi.html">Donasi kegiatan dibuka</a><div class="muted">Operasional & dokumentasi</div></div>
-          </li>
-          <li>
-            <span class="badge">22 Agu</span>
-            <div><a href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Artikel: Adab Penuntut Ilmu (ringkas)</a><div class="muted">Baca ringkasan & tonton rekaman</div></div>
-          </li>
-        </ul>
+        <div id="updatesList" class="updates"></div>
       </section>
 
       <!-- PENTING / URGENT -->
@@ -309,9 +297,7 @@
       const slides=[...track.children];
 
       function show(i){
-        slides.forEach((s,si)=>{
-          s.classList.toggle('active', si===i);
-        });
+        slides.forEach((s,si)=>s.classList.toggle('active', si===i));
         [...dots.children].forEach((d,di)=>d.classList.toggle('active', di===i));
       }
       function go(i,user){
@@ -326,7 +312,6 @@
       nextB?.addEventListener('click', next);
       prevB?.addEventListener('click', prev);
 
-      // hover pause
       const frame=document.querySelector('.frame');
       frame?.addEventListener('mouseenter',()=>clearInterval(timer));
       frame?.addEventListener('mouseleave',restart);
@@ -334,6 +319,71 @@
       restart();
     }
     initSlideshow();
+
+    /* ==========================
+       INFO TERBARU from Google Sheets
+       ========================== */
+    // Pakai URL lama (CSV publish):
+    const INFO_CSV_URL =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
+
+    async function fetchCSV(url){
+      const res = await fetch(url + (url.includes("?") ? "&" : "?") + "_=" + Date.now());
+      const text = (await res.text()).replace(/^\uFEFF/,'');
+      const rows = []; let row=[], cell='', inQuotes=false;
+      for (let i=0;i<text.length;i++){
+        const c=text[i], n=text[i+1];
+        if(c=='"'){ if(inQuotes && n=='"'){ cell+='"'; i++; } else inQuotes=!inQuotes; }
+        else if(c===',' && !inQuotes){ row.push(cell); cell=''; }
+        else if((c==='\n' || (c==='\r'&&n==='\n')) && !inQuotes){
+          if(c==='\r') i++; row.push(cell); cell=''; if(row.length) rows.push(row); row=[];
+        } else { cell+=c; }
+      }
+      if(cell || row.length){ row.push(cell); rows.push(row); }
+      const header = (rows.shift()||[]).map(h=>h.trim().toLowerCase());
+      return rows.map(r => Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
+    }
+    function pick(o, keys){ for(const k of keys){ const v=o[k]; if(v && String(v).trim()) return String(v).trim(); } return ""; }
+    function normalizeInfoRow(r){
+      return {
+        title: pick(r, ['judul','title','nama']),
+        date:  pick(r, ['tanggal','date','tgl','waktu']),
+        href:  pick(r, ['href','link','url']),
+        desc:  pick(r, ['konten','content','deskripsi','desc','ringkasan'])
+      };
+    }
+    function renderInfos(list){
+      const wrap = document.getElementById('updatesList');
+      if(!wrap) return; wrap.innerHTML='';
+      if(!list.length){
+        wrap.innerHTML = '<div class="card"><p class="muted">Belum ada info / gagal memuat.</p></div>';
+        return;
+      }
+      list.slice(0, 6).forEach(it=>{
+        const a = document.createElement('article');
+        a.className = 'card';
+        a.innerHTML = `
+          <h3 style="margin:.2rem 0">${it.title||'Info'}</h3>
+          ${it.desc?`<p class="muted" style="margin:.2rem 0">${it.desc}</p>`:''}
+          <div class="muted">${it.date?new Date(it.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
+          ${it.href?`<a class="btn" style="margin-top:8px" href="${it.href}" ${/^https?:/i.test(it.href)?'target="_blank" rel="noopener"':''}>Baca</a>`:''}
+        `;
+        wrap.appendChild(a);
+      });
+    }
+    async function loadInfos(){
+      try{
+        const rows = await fetchCSV(INFO_CSV_URL);
+        const items = rows.map(normalizeInfoRow)
+                          .filter(x=>x.title || x.desc || x.href)
+                          .sort((a,b)=>new Date(b.date||0) - new Date(a.date||0));
+        renderInfos(items);
+      }catch(e){
+        console.warn('Gagal muat Info Terbaru:', e);
+        renderInfos([]);
+      }
+    }
+    loadInfos();
   </script>
 </body>
 </html>
