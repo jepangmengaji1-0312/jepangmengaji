@@ -3,15 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jepang Mengaji — Beranda</title>
-  <meta name="description" content="Slideshow kegiatan (Google Drive), info & pengumuman dari Spreadsheet, donasi dan konfirmasi transfer.">
+  <title>Jepang Mengaji　コミュニティ — Beranda</title>
+  <meta name="description" content="Slideshow kegiatan, info & pengumuman dari Spreadsheet, donasi dan konfirmasi transfer." />
   <link rel="icon" href="jm.jpeg" />
   <style>
-    :root{
-      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
-      --card:#fff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;
-      --shadow:0 6px 24px rgba(2,6,23,.08)
-    }
+    :root{--bg:#fff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;--card:#fff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;--shadow:0 6px 24px rgba(2,6,23,.08)}
     *{box-sizing:border-box}
     html,body{margin:0;height:100%}
     body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",Arial;background:var(--bg);color:var(--text)}
@@ -19,7 +15,6 @@
     img{display:block;max-width:100%}
     .container{max-width:1180px;margin:0 auto;padding:0 16px}
 
-    /* NAVBAR */
     .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
     .nav-inner{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0}
     .brand{display:flex;gap:10px;align-items:center;font-weight:800}
@@ -29,7 +24,6 @@
     .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
     .btn.ghost{background:transparent}
 
-    /* LAYOUT + SIDEBAR */
     .layout{display:grid;grid-template-columns:1fr;gap:16px}
     @media(min-width:1024px){ .layout{grid-template-columns:260px 1fr} }
     .sidebar{display:none}
@@ -39,7 +33,6 @@
     .sidecard a{display:block;padding:8px;border-radius:8px}
     .sidecard a:hover{background:var(--bg-soft)}
 
-    /* HERO SLIDESHOW */
     .hero{padding:14px 0}
     .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft)}
     .frame{aspect-ratio:16/9;position:relative;width:100%}
@@ -55,7 +48,6 @@
     .dot.active{background:#fff}
     .slide-error{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;color:#991b1b;background:#fee2e2}
 
-    /* SECTIONS */
     .section{padding:18px 0}
     .section h2{margin:0 0 10px}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
@@ -104,7 +96,7 @@
     </aside>
 
     <main>
-      <!-- HERO: Slideshow -->
+      <!-- HERO: Slideshow dari repo -->
       <section class="hero" aria-label="Dokumentasi kegiatan">
         <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Foto Kegiatan">
           <div class="frame">
@@ -219,65 +211,10 @@
     }
 
     /* ==========================
-       GOOGLE DRIVE SLIDESHOW (with errors & retry)
+       SLIDESHOW dari repo (slides.json)
        ========================== */
-    const GOOGLE_API_KEY  = "AIzaSyC9Xi2J5SzGLf8gOfGyehx9NopSTYfBpdg";
-    const DRIVE_FOLDER_ID = "1h4e5PnAqmYS86GsxQiqcNA4Vh73jgZzQ";
-    const MAX_IMAGES      = 100;
-    const CACHE_TTL_MS    = 10 * 60 * 1000;
+    const SLIDES_JSON_URL = 'slides.json'; // file daftar gambar
 
-    const toViewUrl = id => `https://drive.google.com/uc?export=view&id=${id}`;
-    const qs = p => new URLSearchParams(p).toString();
-
-    async function listFolderFiles(pageToken=""){
-      const query = `'${DRIVE_FOLDER_ID}' in parents and trashed=false and (mimeType contains 'image/' or mimeType='application/vnd.google-apps.shortcut')`;
-      const url = `https://www.googleapis.com/drive/v3/files?${qs({
-        q: query,
-        orderBy: 'modifiedTime desc',
-        fields: 'nextPageToken, files(id,name,mimeType,modifiedTime,shortcutDetails)',
-        pageSize: String(MAX_IMAGES),
-        pageToken,
-        key: GOOGLE_API_KEY
-      })}`;
-      const res = await fetch(url);
-      if(!res.ok){
-        const txt = await res.text().catch(()=>res.statusText);
-        throw new Error(`Drive API list error ${res.status}: ${txt}`);
-      }
-      return res.json();
-    }
-    function resolveShortcuts(files){
-      return files.map(f=>{
-        if(f.mimeType === 'application/vnd.google-apps.shortcut' && f.shortcutDetails && f.shortcutDetails.targetId){
-          return { id: f.shortcutDetails.targetId, name: f.name, mimeType: 'image/unknown', modifiedTime: f.modifiedTime };
-        }
-        return f;
-      });
-    }
-    async function fetchDriveImages(){
-      const CK='jm-drive-cache-v3';
-      try{
-        const raw = localStorage.getItem(CK);
-        if(raw){
-          const {ts, files} = JSON.parse(raw);
-          if(Date.now()-ts < CACHE_TTL_MS && Array.isArray(files) && files.length) return files;
-        }
-      }catch(_){}
-      let all = [];
-      let token = "";
-      do{
-        const data = await listFolderFiles(token);
-        const resolved = resolveShortcuts(data.files || []);
-        const imgs = resolved.filter(f => (f.mimeType||'').startsWith('image/') || !f.mimeType);
-        all = all.concat(imgs);
-        token = data.nextPageToken || "";
-      }while(token && all.length < MAX_IMAGES);
-      const files = all.slice(0, MAX_IMAGES).map(f=>({
-        id: f.id, name: f.name, url: toViewUrl(f.id), modifiedTime: f.modifiedTime
-      }));
-      try{ localStorage.setItem(CK, JSON.stringify({ts: Date.now(), files})); }catch(_){}
-      return files;
-    }
     function showSlideError(msg){
       const track = document.getElementById('track');
       if(!track) return;
@@ -288,11 +225,9 @@
           <button id="retry" class="btn">Coba lagi</button>
         </div>
       </div>`;
-      document.getElementById('retry')?.addEventListener('click', ()=>{
-        localStorage.removeItem('jm-drive-cache-v3');
-        initSlideshow();
-      });
+      document.getElementById('retry')?.addEventListener('click', ()=> initSlideshow());
     }
+
     async function initSlideshow(){
       const track = document.getElementById('track');
       const dots  = document.getElementById('dots');
@@ -300,32 +235,36 @@
       const prevB = document.getElementById('prev');
       if(!track || !dots) return;
 
-      let files = [];
+      let slidesData = [];
       try{
-        files = await fetchDriveImages();
+        const res = await fetch(SLIDES_JSON_URL + '?_=' + Date.now());
+        if(!res.ok) throw new Error(res.status+' '+res.statusText);
+        slidesData = await res.json(); // [{src, caption}]
       }catch(e){
-        console.error('[JM] Drive error:', e);
-        showSlideError(e.message || 'Periksa izin folder & API key.');
+        console.error('slides.json error:', e);
+        showSlideError('Pastikan file slides.json ada di root repo & valid JSON.');
         return;
       }
-      if(!files.length){
-        showSlideError('Tidak ada file gambar di folder atau folder belum public (Anyone with the link: Viewer).');
+      if(!Array.isArray(slidesData) || !slidesData.length){
+        showSlideError('slides.json kosong. Tambahkan minimal 1 gambar.');
         return;
       }
 
       track.innerHTML = '';
-      files.forEach((f,i)=>{
+      slidesData.forEach((f,i)=>{
         const fig = document.createElement('figure');
         fig.className = 'slide' + (i===0?' active':'');
+        const src = f.src || '';
+        const cap = f.caption || ('Kegiatan ' + (i+1));
         fig.innerHTML = `
-          <img src="${f.url}" alt="${f.name||('Kegiatan '+(i+1))}">
-          <figcaption class="caption">${f.name || 'Kegiatan ' + (i+1)}</figcaption>
+          <img src="${src}" alt="${cap}">
+          <figcaption class="caption">${cap}</figcaption>
         `;
         track.appendChild(fig);
       });
 
       dots.innerHTML='';
-      files.forEach((_,i)=>{
+      slidesData.forEach((_,i)=>{
         const b=document.createElement('button');
         b.className='dot'+(i===0?' active':'');
         b.addEventListener('click',()=>go(i,true));
@@ -357,7 +296,7 @@
     initSlideshow();
 
     /* ==========================
-       CSV helpers + sections
+       CSV helpers + sections (Spreadsheet)
        ========================== */
     const ARTICLES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
     const INFO_CSV_URL     = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
@@ -422,7 +361,6 @@
     }
 
     async function loadSections(){
-      // Info Terbaru
       try{
         const rows = await fetchCSV(INFO_CSV_URL);
         const items = rows.map(r=>({
@@ -435,7 +373,6 @@
         renderUpdates(items);
       }catch(e){ console.warn('Info error', e); renderUpdates([]); }
 
-      // Penting
       try{
         const rows = await fetchCSV(URGENT_CSV_URL);
         const items = rows.map(r=>({
@@ -447,7 +384,6 @@
         renderUrgent(items);
       }catch(e){ console.warn('Urgent error', e); renderUrgent([]); }
 
-      // Artikel
       try{
         const rows = await fetchCSV(ARTICLES_CSV_URL);
         const items = rows.map(r=>({
