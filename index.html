@@ -243,7 +243,6 @@
        SLIDESHOW: slides.json → fallback ke file di repo
        ========================== */
     const SLIDES_JSON_URL = 'slides.json';
-    // fallback sesuai file yang kamu upload di repo:
     const fallbackSlides = [
       { src: "assets/slides/1.jpeg", caption: "Kegiatan 1" },
       { src: "assets/slides/2.jpeg", caption: "Kegiatan 2" },
@@ -285,7 +284,7 @@
       const slidesData = (await loadSlidesJson()) || fallbackSlides;
 
       if(!Array.isArray(slidesData) || !slidesData.length){
-        showSlideError('Tambahkan slides.json di root repo, atau pastikan file fallback ada.');
+        showSlideError('Tambahkan slides.json di root repo, atau pastikan file fallback ada (assets/slides/1.jpeg, 2.jpeg, 3.jpeg).');
         return;
       }
 
@@ -427,7 +426,7 @@
           title: pick(r,['title','judul','nama','artikel']),
           excerpt: pick(r,['excerpt','ringkasan','deskripsi','desc','konten','content']),
           date: pick(r,['date','tanggal','published','tgl']),
-          href: pick(r',['href','link','url'])
+          href: pick(r,['href','link','url'])
         })).filter(x=>x.title||x.href)
           .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
         renderArticles(items);
