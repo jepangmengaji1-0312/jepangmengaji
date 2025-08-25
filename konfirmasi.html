@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Konfirmasi Transfer — Jepang Mengaji</title>
+  <meta name="description" content="Form konfirmasi transfer donasi Jepang Mengaji via WhatsApp dan Email otomatis.">
+  <link rel="icon" href="jm.jpeg" />
+  <style>
+    :root{
+      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
+      --card:#fff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;
+      --shadow:0 6px 24px rgba(2,6,23,.08)
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",Arial;background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:840px;margin:0 auto;padding:16px}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:10px 14px;cursor:pointer}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .card{border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:var(--shadow);padding:14px}
+    .grid{display:grid;gap:10px}
+    @media(min-width:760px){.grid-2{grid-template-columns:1fr 1fr}}
+    .muted{color:#475569}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header style="display:flex;align-items:center;gap:10px">
+      <img src="jm.jpeg" alt="JM" style="width:36px;height:36px;border-radius:8px;border:1px solid var(--border)">
+      <div>
+        <h1 style="margin:0">Konfirmasi Transfer</h1>
+        <div class="muted">Kirim lewat WhatsApp atau Email (format otomatis).</div>
+      </div>
+    </header>
+
+    <main class="card" style="margin-top:12px">
+      <div class="grid grid-2">
+        <input class="btn" id="kf-nama" placeholder="Nama">
+        <input class="btn" id="kf-nominal" placeholder="Nominal (cth 100000)">
+        <input class="btn" id="kf-tanggal" type="date">
+        <select class="btn" id="kf-bank">
+          <option value="">Transfer ke</option><option>SMBC / Jenius</option><option>Yucho</option>
+        </select>
+        <input class="btn" id="kf-keterangan" placeholder="Keterangan (opsional)">
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn primary" id="btnWA">Kirim via WhatsApp</button>
+        <a class="btn" id="btnEmail" href="#">Kirim via Email</a>
+        <a class="btn" href="donasi.html">← Kembali ke Donasi</a>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function buildKonfirmasi(){
+      const nama=(document.getElementById('kf-nama')||{}).value||'';
+      const nominal=(document.getElementById('kf-nominal')||{}).value||'';
+      const tgl=(document.getElementById('kf-tanggal')||{}).value||'';
+      const bank=(document.getElementById('kf-bank')||{}).value||'';
+      const ket=(document.getElementById('kf-keterangan')||{}).value||'';
+      return [
+        "Assalamu'alaikum, saya ingin konfirmasi transfer.",
+        `Nama: ${nama||'-'}`,
+        `Nominal: ${nominal||'-'}`,
+        `Tanggal: ${tgl||'-'}`,
+        `Transfer ke: ${bank||'-'}`,
+        ket?`Keterangan: ${ket}`:''
+      ].filter(Boolean).join('\n');
+    }
+    const btnWA=document.getElementById('btnWA');
+    const btnEmail=document.getElementById('btnEmail');
+    if(btnWA){ btnWA.addEventListener('click',()=>{ const msg=encodeURIComponent(buildKonfirmasi()); window.open(`https://wa.me/817084810427?text=${msg}`,'_blank','noopener'); });}
+    if(btnEmail){ btnEmail.addEventListener('click',e=>{ const body=encodeURIComponent(buildKonfirmasi()); e.currentTarget.href=`mailto:jepangmengaji@gmail.com?subject=Konfirmasi%20Transfer&body=${body}`; });
+    }
+  </script>
+</body>
+</html>
