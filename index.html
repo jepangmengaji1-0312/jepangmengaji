@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jepang Mengaji — Beranda</title>
-  <meta name="description" content="Beranda Jepang Mengaji: slideshow kegiatan (Google Drive), info terbaru (Google Sheets), donasi & konfirmasi transfer.">
+  <meta name="description" content="Slideshow kegiatan (Google Drive), info & pengumuman dari Spreadsheet, donasi dan konfirmasi transfer.">
   <link rel="icon" href="jm.jpeg" />
   <style>
     :root{
@@ -29,7 +29,7 @@
     .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
     .btn.ghost{background:transparent}
 
-    /* LAYOUT + SIDEBAR JADUL */
+    /* LAYOUT + SIDEBAR */
     .layout{display:grid;grid-template-columns:1fr;gap:16px}
     @media(min-width:1024px){ .layout{grid-template-columns:260px 1fr} }
     .sidebar{display:none}
@@ -53,16 +53,17 @@
     .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
     .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);border:none}
     .dot.active{background:#fff}
+    .slide-error{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;color:#991b1b;background:#fee2e2}
 
     /* SECTIONS */
     .section{padding:18px 0}
     .section h2{margin:0 0 10px}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
+    .cards-3{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:900px){.cards-3{grid-template-columns:repeat(3,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
     .muted{color:var(--muted)}
-    .updates{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:820px){.updates{grid-template-columns:repeat(3,1fr)}}
 
     footer{border-top:1px solid var(--border);padding:26px 0 40px;color:var(--muted)}
     .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -78,6 +79,7 @@
       <div class="nav-links">
         <a class="btn ghost" href="#updates">Info Terbaru</a>
         <a class="btn ghost" href="#urgent">Penting</a>
+        <a class="btn ghost" href="#artikel">Artikel</a>
         <a class="btn ghost" href="#donasi">Donasi</a>
         <a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Arsip YouTube</a>
       </div>
@@ -85,12 +87,13 @@
   </nav>
 
   <div class="container layout">
-    <!-- SIDEBAR ala web jadul (desktop) -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidecard">
         <h3>Navigasi</h3>
         <a href="#updates">🆕 Info Terbaru</a>
         <a href="#urgent">⚠️ Pengumuman Penting</a>
+        <a href="#artikel">📖 Artikel</a>
         <a href="#donasi">❤️ Donasi & Konfirmasi</a>
         <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
         <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
@@ -101,11 +104,11 @@
     </aside>
 
     <main>
-      <!-- HERO: Slideshow otomatis dari Google Drive -->
+      <!-- HERO: Slideshow -->
       <section class="hero" aria-label="Dokumentasi kegiatan">
         <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Foto Kegiatan">
           <div class="frame">
-            <div class="track" id="track"><!-- slides injected by JS --></div>
+            <div class="track" id="track"></div>
             <div class="ctrl"><button id="prev" aria-label="Sebelumnya">‹</button><button id="next" aria-label="Berikutnya">›</button></div>
             <div class="dots" id="dots"></div>
           </div>
@@ -147,19 +150,22 @@
         </div>
       </section>
 
-      <!-- INFO TERBARU (Google Sheets) -->
+      <!-- INFO TERBARU -->
       <section id="updates" class="section">
         <h2>Info Terbaru</h2>
-        <div id="updatesList" class="updates"></div>
+        <div id="updatesList" class="cards-3"></div>
       </section>
 
-      <!-- PENTING / URGENT -->
+      <!-- PENGUMUMAN PENTING -->
       <section id="urgent" class="section" style="background:var(--bg-soft);border:1px solid var(--border);border-radius:12px;padding:16px">
         <h2>Pengumuman Penting</h2>
-        <div class="cards">
-          <article class="card"><h3>Perubahan Lokasi Kajian</h3><p class="muted">Kajian ustadz Yusril di Masjid As-Sunnah Hekinan — mohon hadir 10 menit lebih awal.</p></article>
-          <article class="card"><h3>Kebutuhan Relawan</h3><p class="muted">Butuh 6 orang untuk dokumentasi & kebersihan. Hubungi panitia.</p></article>
-        </div>
+        <div id="urgentList" class="cards"></div>
+      </section>
+
+      <!-- ARTIKEL -->
+      <section id="artikel" class="section">
+        <h2>Artikel</h2>
+        <div id="articlesList" class="cards-3"></div>
       </section>
     </main>
   </div>
@@ -167,7 +173,8 @@
   <footer>
     <div class="container foot">
       <div>© <span id="year"></span> Jepang Mengaji</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span class="muted copy">Design by Wahyu</span>
         <a class="muted" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
         <a class="muted" href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
       </div>
@@ -212,10 +219,10 @@
     }
 
     /* ==========================
-       GOOGLE DRIVE SLIDESHOW (fix)
+       GOOGLE DRIVE SLIDESHOW (with errors & retry)
        ========================== */
-    const GOOGLE_API_KEY  = "AIzaSyC9Xi2J5SzGLf8gOfGyehx9NopSTYfBpdg";  // key kamu
-    const DRIVE_FOLDER_ID = "1h4e5PnAqmYS86GsxQiqcNA4Vh73jgZzQ";         // folder kamu
+    const GOOGLE_API_KEY  = "AIzaSyC9Xi2J5SzGLf8gOfGyehx9NopSTYfBpdg";
+    const DRIVE_FOLDER_ID = "1h4e5PnAqmYS86GsxQiqcNA4Vh73jgZzQ";
     const MAX_IMAGES      = 100;
     const CACHE_TTL_MS    = 10 * 60 * 1000;
 
@@ -239,23 +246,16 @@
       }
       return res.json();
     }
-
     function resolveShortcuts(files){
       return files.map(f=>{
         if(f.mimeType === 'application/vnd.google-apps.shortcut' && f.shortcutDetails && f.shortcutDetails.targetId){
-          return {
-            id: f.shortcutDetails.targetId,
-            name: f.name,
-            mimeType: 'image/unknown',
-            modifiedTime: f.modifiedTime
-          };
+          return { id: f.shortcutDetails.targetId, name: f.name, mimeType: 'image/unknown', modifiedTime: f.modifiedTime };
         }
         return f;
       });
     }
-
     async function fetchDriveImages(){
-      const CK='jm-drive-cache-v2';
+      const CK='jm-drive-cache-v3';
       try{
         const raw = localStorage.getItem(CK);
         if(raw){
@@ -263,7 +263,6 @@
           if(Date.now()-ts < CACHE_TTL_MS && Array.isArray(files) && files.length) return files;
         }
       }catch(_){}
-
       let all = [];
       let token = "";
       do{
@@ -273,18 +272,27 @@
         all = all.concat(imgs);
         token = data.nextPageToken || "";
       }while(token && all.length < MAX_IMAGES);
-
       const files = all.slice(0, MAX_IMAGES).map(f=>({
-        id: f.id,
-        name: f.name,
-        url: toViewUrl(f.id),
-        modifiedTime: f.modifiedTime
+        id: f.id, name: f.name, url: toViewUrl(f.id), modifiedTime: f.modifiedTime
       }));
-
       try{ localStorage.setItem(CK, JSON.stringify({ts: Date.now(), files})); }catch(_){}
       return files;
     }
-
+    function showSlideError(msg){
+      const track = document.getElementById('track');
+      if(!track) return;
+      track.innerHTML = `<div class="slide-error">
+        <div>
+          <strong>Slideshow tidak dapat memuat gambar.</strong><br/>
+          <small>${msg}</small><br/><br/>
+          <button id="retry" class="btn">Coba lagi</button>
+        </div>
+      </div>`;
+      document.getElementById('retry')?.addEventListener('click', ()=>{
+        localStorage.removeItem('jm-drive-cache-v3');
+        initSlideshow();
+      });
+    }
     async function initSlideshow(){
       const track = document.getElementById('track');
       const dots  = document.getElementById('dots');
@@ -297,10 +305,12 @@
         files = await fetchDriveImages();
       }catch(e){
         console.error('[JM] Drive error:', e);
+        showSlideError(e.message || 'Periksa izin folder & API key.');
+        return;
       }
       if(!files.length){
-        console.warn('[JM] Tidak menemukan gambar di folder (cek permission & isi folder).');
-        files = [{url:'jm.jpeg', name:'Jepang Mengaji'}];
+        showSlideError('Tidak ada file gambar di folder atau folder belum public (Anyone with the link: Viewer).');
+        return;
       }
 
       track.innerHTML = '';
@@ -347,10 +357,11 @@
     initSlideshow();
 
     /* ==========================
-       INFO TERBARU from Google Sheets
+       CSV helpers + sections
        ========================== */
-    const INFO_CSV_URL =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
+    const ARTICLES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
+    const INFO_CSV_URL     = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
+    const URGENT_CSV_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
 
     async function fetchCSV(url){
       const res = await fetch(url + (url.includes("?") ? "&" : "?") + "_=" + Date.now());
@@ -368,47 +379,88 @@
       const header = (rows.shift()||[]).map(h=>h.trim().toLowerCase());
       return rows.map(r => Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
     }
-    function pick(o, keys){ for(const k of keys){ const v=o[k]; if(v && String(v).trim()) return String(v).trim(); } return ""; }
-    function normalizeInfoRow(r){
-      return {
-        title: pick(r, ['judul','title','nama']),
-        date:  pick(r, ['tanggal','date','tgl','waktu']),
-        href:  pick(r, ['href','link','url']),
-        desc:  pick(r, ['konten','content','deskripsi','desc','ringkasan'])
-      };
-    }
-    function renderInfos(list){
-      const wrap = document.getElementById('updatesList');
-      if(!wrap) return; wrap.innerHTML='';
-      if(!list.length){
-        wrap.innerHTML = '<div class="card"><p class="muted">Belum ada info / gagal memuat.</p></div>';
-        return;
-      }
-      list.slice(0, 6).forEach(it=>{
-        const a = document.createElement('article');
-        a.className = 'card';
-        a.innerHTML = `
+    const pick = (o,keys)=>{ for(const k of keys){ const v=o[k]; if(v && String(v).trim()) return String(v).trim(); } return ""; };
+
+    function renderUpdates(list){
+      const wrap=document.getElementById('updatesList'); wrap.innerHTML='';
+      if(!list.length){ wrap.innerHTML='<div class="card"><p class="muted">Belum ada info / gagal memuat.</p></div>'; return; }
+      list.slice(0,6).forEach(it=>{
+        const el=document.createElement('article'); el.className='card';
+        el.innerHTML = `
           <h3 style="margin:.2rem 0">${it.title||'Info'}</h3>
           ${it.desc?`<p class="muted" style="margin:.2rem 0">${it.desc}</p>`:''}
           <div class="muted">${it.date?new Date(it.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
           ${it.href?`<a class="btn" style="margin-top:8px" href="${it.href}" ${/^https?:/i.test(it.href)?'target="_blank" rel="noopener"':''}>Baca</a>`:''}
-        `;
-        wrap.appendChild(a);
+        `; wrap.appendChild(el);
       });
     }
-    async function loadInfos(){
+    function renderUrgent(list){
+      const wrap=document.getElementById('urgentList'); wrap.innerHTML='';
+      if(!list.length){ wrap.innerHTML='<div class="card"><p class="muted">Belum ada pengumuman / set dulu sheet Penting.</p></div>'; return; }
+      list.slice(0,4).forEach(it=>{
+        const el=document.createElement('article'); el.className='card';
+        el.innerHTML = `
+          <h3 style="margin:.2rem 0">${it.title||'Pengumuman'}</h3>
+          ${it.desc?`<p class="muted" style="margin:.2rem 0">${it.desc}</p>`:''}
+          <div class="muted">${it.date?new Date(it.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
+        `; wrap.appendChild(el);
+      });
+    }
+    function renderArticles(list){
+      const wrap=document.getElementById('articlesList'); wrap.innerHTML='';
+      if(!list.length){ wrap.innerHTML='<div class="card"><p class="muted">Belum ada artikel / gagal memuat.</p></div>'; return; }
+      list.slice(0,6).forEach(a=>{
+        const el=document.createElement('article'); el.className='card';
+        el.innerHTML=`
+          <h3 style="margin:.2rem 0">${a.title||''}</h3>
+          ${a.excerpt?`<p class="muted" style="margin:.2rem 0">${a.excerpt}</p>`:''}
+          <div class="muted">${a.date?new Date(a.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
+          ${a.href?`<a class="btn" style="margin-top:8px" href="${a.href}" ${/^https?:/i.test(a.href)?'target="_blank" rel="noopener"':''}>Baca</a>`:''}
+        `;
+        wrap.appendChild(el);
+      });
+    }
+
+    async function loadSections(){
+      // Info Terbaru
       try{
         const rows = await fetchCSV(INFO_CSV_URL);
-        const items = rows.map(normalizeInfoRow)
-                          .filter(x=>x.title || x.desc || x.href)
-                          .sort((a,b)=>new Date(b.date||0) - new Date(a.date||0));
-        renderInfos(items);
-      }catch(e){
-        console.warn('Gagal muat Info Terbaru:', e);
-        renderInfos([]);
-      }
+        const items = rows.map(r=>({
+          title: pick(r,['judul','title','nama']),
+          date:  pick(r,['tanggal','date','tgl','waktu']),
+          href:  pick(r,['href','link','url']),
+          desc:  pick(r,['konten','content','deskripsi','desc','ringkasan'])
+        })).filter(x=>x.title||x.desc||x.href)
+          .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+        renderUpdates(items);
+      }catch(e){ console.warn('Info error', e); renderUpdates([]); }
+
+      // Penting
+      try{
+        const rows = await fetchCSV(URGENT_CSV_URL);
+        const items = rows.map(r=>({
+          title: pick(r,['judul','title','pengumuman']),
+          date:  pick(r,['tanggal','date','tgl']),
+          desc:  pick(r,['konten','content','deskripsi','desc','ringkasan'])
+        })).filter(x=>x.title||x.desc)
+          .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+        renderUrgent(items);
+      }catch(e){ console.warn('Urgent error', e); renderUrgent([]); }
+
+      // Artikel
+      try{
+        const rows = await fetchCSV(ARTICLES_CSV_URL);
+        const items = rows.map(r=>({
+          title: pick(r,['title','judul','nama','artikel']),
+          excerpt: pick(r,['excerpt','ringkasan','deskripsi','desc','konten','content']),
+          date: pick(r,['date','tanggal','published','tgl']),
+          href: pick(r,['href','link','url'])
+        })).filter(x=>x.title||x.href)
+          .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+        renderArticles(items);
+      }catch(e){ console.warn('Artikel error', e); renderArticles([]); }
     }
-    loadInfos();
+    loadSections();
   </script>
 </body>
 </html>
