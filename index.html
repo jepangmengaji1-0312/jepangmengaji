@@ -1,57 +1,72 @@
 <!doctype html>
-<html lang="id" data-theme="light">
+<html lang="id" data-theme="light" id="top">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jepang Mengaji　コミュニティ — Beranda</title>
+  <title>Jepang Mengaji — Beranda</title>
   <meta name="description" content="Slideshow kegiatan, info & pengumuman dari Spreadsheet, donasi dan konfirmasi transfer." />
   <link rel="icon" href="jm.jpeg" />
   <style>
-    :root{--bg:#fff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;--card:#fff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;--shadow:0 6px 24px rgba(2,6,23,.08)}
+    :root{
+      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
+      --card:#fff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;
+      --shadow:0 6px 24px rgba(2,6,23,.08)
+    }
     *{box-sizing:border-box}
     html,body{margin:0;height:100%}
     body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",Arial;background:var(--bg);color:var(--text)}
     a{color:inherit;text-decoration:none}
     img{display:block;max-width:100%}
-    .container{max-width:1180px;margin:0 auto;padding:0 16px}
 
-    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .container{max-width:1200px;margin:0 auto;padding:0 14px}
+    @media(min-width:640px){.container{padding:0 16px}}
+    @media(min-width:1024px){.container{padding:0 20px}}
+
+    /* NAVBAR */
+    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
     .nav-inner{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0}
-    .brand{display:flex;gap:10px;align-items:center;font-weight:800}
-    .brand img{width:36px;height:36px;border-radius:8px;border:1px solid var(--border)}
-    .nav-links{display:flex;gap:8px;align-items:center;overflow:auto}
-    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px;cursor:pointer}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:800;white-space:nowrap}
+    .brand img{width:34px;height:34px;border-radius:8px;border:1px solid var(--border)}
+    .nav-links{display:flex;gap:8px;align-items:center;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px;cursor:pointer;white-space:nowrap}
     .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
     .btn.ghost{background:transparent}
 
-    .layout{display:grid;grid-template-columns:1fr;gap:16px}
+    /* LAYOUT + SIDEBAR */
+    .layout{display:grid;grid-template-columns:1fr;gap:14px}
     @media(min-width:1024px){ .layout{grid-template-columns:260px 1fr} }
     .sidebar{display:none}
-    @media(min-width:1024px){ .sidebar{display:block;position:sticky;top:64px;height:calc(100vh - 80px)} }
+    @media(min-width:1024px){ .sidebar{display:block;position:sticky;top:68px;height:calc(100vh - 84px)} }
     .sidecard{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
     .sidecard h3{margin:4px 0 8px;font-size:15px}
     .sidecard a{display:block;padding:8px;border-radius:8px}
     .sidecard a:hover{background:var(--bg-soft)}
 
-    .hero{padding:14px 0}
+    /* HERO SLIDESHOW */
+    .hero{padding:12px 0}
     .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft)}
-    .frame{aspect-ratio:16/9;position:relative;width:100%}
+    .frame{position:relative;width:100%;aspect-ratio:16/9}
+    @media(min-width:640px){.frame{aspect-ratio:16/9}}
     .track{position:relative;width:100%;height:100%}
     .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
     .slide.active{opacity:1}
-    .slide img{width:100%;height:100%;object-fit:cover}
-    .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:8px 10px;border-radius:10px;font-size:14px}
+    .slide img{width:100%;height:100%;object-fit:cover;object-position:center}
+    .caption{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:13px}
+    @media(min-width:640px){.caption{font-size:14px}}
     .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 6px;pointer-events:none}
-    .ctrl button{pointer-events:auto;background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.25);width:40px;height:40px;border-radius:999px}
+    .ctrl button{pointer-events:auto;background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.25);width:38px;height:38px;border-radius:999px}
     .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
-    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);border:none}
+    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.55);border:none}
     .dot.active{background:#fff}
     .slide-error{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;color:#991b1b;background:#fee2e2}
 
-    .section{padding:18px 0}
+    /* SECTIONS */
+    .section{padding:16px 0}
     .section h2{margin:0 0 10px}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:640px){.cards{grid-template-columns:repeat(2,1fr)}}
     .cards-3{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:900px){.cards-3{grid-template-columns:repeat(3,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
@@ -59,7 +74,7 @@
 
     footer{border-top:1px solid var(--border);padding:26px 0 40px;color:var(--muted)}
     .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .copy{font-size:.85rem;padding:.25rem .5rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-soft)}
+    .chip{font-size:.85rem;padding:.25rem .5rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-soft)}
     input.btn, select.btn{background:#fff}
   </style>
 </head>
@@ -69,6 +84,7 @@
     <div class="container nav-inner">
       <div class="brand"><img src="jm.jpeg" alt="JM"><span>Jepang Mengaji</span></div>
       <div class="nav-links">
+        <a class="btn ghost" href="#top">Home</a>
         <a class="btn ghost" href="#updates">Info Terbaru</a>
         <a class="btn ghost" href="#urgent">Penting</a>
         <a class="btn ghost" href="#artikel">Artikel</a>
@@ -96,7 +112,7 @@
     </aside>
 
     <main>
-      <!-- HERO: Slideshow dari repo -->
+      <!-- HERO: Slideshow -->
       <section class="hero" aria-label="Dokumentasi kegiatan">
         <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Foto Kegiatan">
           <div class="frame">
@@ -114,8 +130,8 @@
             <h3>❤️ Donasi Kegiatan</h3>
             <p class="muted">Dukung dakwah: operasional, dokumentasi, dan penyelenggaraan kajian.</p>
             <ul class="muted" style="line-height:1.7;margin:.4rem 0">
-              <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> — <strong id="rek-jenius">90220139952</strong> <button class="copy" data-copy="#rek-jenius">Salin</button></li>
-              <li>Yucho Ginko a.n. <em>トリサンボド</em> — <strong id="rek-yucho">14660-20688191</strong> <button class="copy" data-copy="#rek-yucho">Salin</button></li>
+              <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> — <strong id="rek-jenius">90220139952</strong> <button class="chip" data-copy="#rek-jenius">Salin</button></li>
+              <li>Yucho Ginko a.n. <em>トリサンボド</em> — <strong id="rek-yucho">14660-20688191</strong> <button class="chip" data-copy="#rek-yucho">Salin</button></li>
             </ul>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
               <a class="btn" href="#konfirmasi">✅ Konfirmasi Transfer</a>
@@ -166,7 +182,7 @@
     <div class="container foot">
       <div>© <span id="year"></span> Jepang Mengaji</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <span class="muted copy">Design by Wahyu</span>
+        <span class="muted chip">Design by Wahyu</span>
         <a class="muted" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
         <a class="muted" href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
       </div>
@@ -174,22 +190,22 @@
   </footer>
 
   <script>
-    // ===== Footer year =====
+    // ===== Tahun footer
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ===== Copy rekening =====
+    // ===== Copy nomor rekening
     function copySel(sel){
       const el=document.querySelector(sel);
       if(!el) return;
       navigator.clipboard.writeText(el.textContent.trim()).then(()=>alert('Nomor rekening tersalin'),()=>alert('Gagal menyalin'));
     }
     document.addEventListener('click',e=>{
-      const btn=e.target.closest('.copy[data-copy]');
+      const btn=e.target.closest('.chip[data-copy]');
       if(!btn) return;
       copySel(btn.getAttribute('data-copy'));
     });
 
-    // ===== Konfirmasi Transfer (WA/Email)
+    // ===== Konfirmasi Transfer
     function buildKonfirmasi(){
       const nama=(document.getElementById('kf-nama')||{}).value||'';
       const nominal=(document.getElementById('kf-nominal')||{}).value||'';
@@ -203,17 +219,25 @@
         `Transfer ke: ${bank||'-'}`
       ].join('\n');
     }
-    const btnWA=document.getElementById('btnWA');
-    const btnEmail=document.getElementById('btnEmail');
-    if(btnWA){ btnWA.addEventListener('click',()=>{ const msg=encodeURIComponent(buildKonfirmasi()); window.open(`https://wa.me/817084810427?text=${msg}`,'_blank','noopener'); });}
-    if(btnEmail){ btnEmail.addEventListener('click',e=>{ const body=encodeURIComponent(buildKonfirmasi()); e.currentTarget.href=`mailto:jepangmengaji@gmail.com?subject=Konfirmasi%20Transfer&body=${body}`; });
-
-    }
+    document.getElementById('btnWA')?.addEventListener('click',()=>{
+      const msg=encodeURIComponent(buildKonfirmasi());
+      window.open(`https://wa.me/817084810427?text=${msg}`,'_blank','noopener');
+    });
+    document.getElementById('btnEmail')?.addEventListener('click',e=>{
+      const body=encodeURIComponent(buildKonfirmasi());
+      e.currentTarget.href=`mailto:jepangmengaji@gmail.com?subject=Konfirmasi%20Transfer&body=${body}`;
+    });
 
     /* ==========================
-       SLIDESHOW dari repo (slides.json)
+       SLIDESHOW: slides.json → fallback ke file di repo
        ========================== */
-    const SLIDES_JSON_URL = 'slides.json'; // file daftar gambar
+    const SLIDES_JSON_URL = 'slides.json';
+    // fallback sesuai file yang kamu upload di repo:
+    const fallbackSlides = [
+      { src: "assets/slides/1.jpeg", caption: "Kegiatan 1" },
+      { src: "assets/slides/2.jpeg", caption: "Kegiatan 2" },
+      { src: "assets/slides/3.jpeg", caption: "Kegiatan 3" }
+    ];
 
     function showSlideError(msg){
       const track = document.getElementById('track');
@@ -228,6 +252,18 @@
       document.getElementById('retry')?.addEventListener('click', ()=> initSlideshow());
     }
 
+    async function loadSlidesJson() {
+      try{
+        const res = await fetch(SLIDES_JSON_URL + '?_=' + Date.now(), { cache: 'no-store' });
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        if (!Array.isArray(data) || !data.length) throw new Error('slides.json kosong');
+        return data;
+      }catch(e){
+        return null; // pakai fallback
+      }
+    }
+
     async function initSlideshow(){
       const track = document.getElementById('track');
       const dots  = document.getElementById('dots');
@@ -235,18 +271,10 @@
       const prevB = document.getElementById('prev');
       if(!track || !dots) return;
 
-      let slidesData = [];
-      try{
-        const res = await fetch(SLIDES_JSON_URL + '?_=' + Date.now());
-        if(!res.ok) throw new Error(res.status+' '+res.statusText);
-        slidesData = await res.json(); // [{src, caption}]
-      }catch(e){
-        console.error('slides.json error:', e);
-        showSlideError('Pastikan file slides.json ada di root repo & valid JSON.');
-        return;
-      }
+      const slidesData = (await loadSlidesJson()) || fallbackSlides;
+
       if(!Array.isArray(slidesData) || !slidesData.length){
-        showSlideError('slides.json kosong. Tambahkan minimal 1 gambar.');
+        showSlideError('Tambahkan slides.json di root repo, atau pastikan file fallback ada.');
         return;
       }
 
@@ -278,9 +306,7 @@
         slides.forEach((s,si)=>s.classList.toggle('active', si===i));
         [...dots.children].forEach((d,di)=>d.classList.toggle('active', di===i));
       }
-      function go(i,user){
-        const n=slides.length; idx=(i+n)%n; show(idx); if(user) restart();
-      }
+      function go(i,user){ const n=slides.length; idx=(i+n)%n; show(idx); if(user) restart(); }
       function next(){ go(idx+1,false); }
       function prev(){ go(idx-1,true); }
       function restart(){ clearInterval(timer); timer=setInterval(next, 5000); }
