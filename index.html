@@ -4,244 +4,253 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jepang Mengaji — Beranda</title>
-  <meta name="description" content="Komunitas Jepang Mengaji, Mengaji Sesuai Sunnah, info dauroh, kegiatan di Jepang." />
+  <meta name="description" content="Komunitas Jepang Mengaji: info terbaru, pengumuman penting, artikel, donasi & konfirmasi, serta arsip YouTube." />
   <link rel="icon" href="jm.jpeg" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <style>
     :root{
-      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
-      --card:#fff;--border:#e5e7eb;--primary:#2563eb;--primary-2:#1d4ed8;--accent:#0ea5e9;
-      --shadow:0 8px 30px rgba(2,6,23,.08)
+      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#556070;
+      --card:#ffffff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;
+      --shadow:0 10px 25px rgba(2,6,23,.06)
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",Arial;background:var(--bg);color:var(--text)}
+    *{box-sizing:border-box} html,body{margin:0;height:100%} img{max-width:100%;display:block}
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",Arial;
+      color:var(--text); background:var(--bg);
+    }
+    /* BG watermark gradasi */
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2;
+      background:linear-gradient(180deg,#fff 0%, #f6f8fb 50%, #eef2f7 100%);
+    }
+    body::after{
+      content:"Jepang Mengaji"; position:fixed; z-index:-1; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800; letter-spacing:.02em;
+      color:#0f172a; opacity:.06; pointer-events:none;
+      font-size:16vw; line-height:1; user-select:none;
+    }
+
     a{color:inherit;text-decoration:none}
-    img{display:block;max-width:100%}
+    .container{max-width:1180px;margin:0 auto;padding:0 16px}
 
-    .container{max-width:1200px;margin:0 auto;padding:0 14px}
-    @media(min-width:640px){.container{padding:0 16px}}
-    @media(min-width:1024px){.container{padding:0 20px}}
-
-    /* NAVBAR */
-    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-    .nav-inner{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;flex-wrap:nowrap}
-    .brand{display:flex;gap:10px;align-items:center;font-weight:800;white-space:nowrap;flex:0 0 auto}
+    /* NAVBAR + burger */
+    .nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;min-width:0}
     .brand img{width:34px;height:34px;border-radius:8px;border:1px solid var(--border)}
-    .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw;display:inline-block}
-    .nav-links{display:flex;gap:8px;align-items:center;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1 1 auto;min-width:0}
-    .nav-links::-webkit-scrollbar{display:none}
-
-    /* ===== BUTTON SYSTEM (mobile friendly) ===== */
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      border:1px solid var(--border);background:#fff;color:var(--text);
-      border-radius:999px;padding:10px 14px;font-weight:600;cursor:pointer;
-      transition:all .15s ease; text-align:center; line-height:1.2;
-    }
-    .btn:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
-    .btn:active{transform:translateY(0)}
-    .btn-primary{
-      color:#fff;border-color:transparent;
-      background:linear-gradient(180deg,var(--primary),var(--primary-2));
-    }
-    .btn-outline{
-      background:transparent;color:var(--primary);border-color:var(--primary);
-    }
-    .btn-lg{padding:14px 18px;font-size:18px;border-radius:16px}
+    .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:54vw}
+    .nav-links{display:flex;gap:8px;list-style:none;margin:0;padding:0}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px;cursor:pointer;white-space:nowrap}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
     .btn.ghost{background:transparent}
-
-    /* Stack buttons on small screens */
-    .btn-stack{display:flex;gap:10px;flex-wrap:wrap}
-    @media(max-width:768px){
-      .btn-stack .btn{width:100%}
+    .menu-btn{display:none;flex-direction:column;gap:4px;cursor:pointer}
+    .menu-btn span{width:24px;height:3px;background:var(--text);border-radius:2px}
+    @media(max-width:960px){
+      .menu-btn{display:flex}
+      .nav-links{display:none;flex-direction:column;position:absolute;top:100%;right:10px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:10px;width:220px}
+      .nav-links.open{display:flex}
     }
 
-    /* INPUTS */
-    .input{
-      width:100%;padding:10px 12px;border:1px solid var(--border);
-      border-radius:12px;background:#fff;color:var(--text);
-    }
+    /* Channel header */
+    .channel{border-bottom:1px solid var(--border);background:transparent}
+    .banner{aspect-ratio:16/4;width:100%;background:linear-gradient(90deg,#0f172a,#1f2937);border-radius:0 0 14px 14px}
+    .channel-bar{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+    .avatar{width:72px;height:72px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.08);object-fit:cover}
+    .ch-meta{flex:1;min-width:220px}
+    .ch-title{margin:0;font-size:22px;font-weight:800}
+    .ch-sub{margin:.2rem 0 0;color:var(--muted);font-size:14px}
 
-    /* LAYOUT + SIDEBAR */
-    .layout{display:grid;grid-template-columns:1fr;gap:14px}
-    @media(min-width:1024px){ .layout{grid-template-columns:260px 1fr} }
-    .sidebar{display:none}
-    @media(min-width:1024px){ .sidebar{display:block;position:sticky;top:68px;height:calc(100vh - 84px)} }
-    .sidecard{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
-    .sidecard h3{margin:4px 0 8px;font-size:15px}
-    .sidecard a{display:block;padding:8px;border-radius:8px}
-    .sidecard a:hover{background:var(--bg-soft)}
-
-    /* HERO SLIDESHOW */
-    .hero{padding:12px 0}
-    .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft)}
+    /* HERO Carousel */
+    .hero{padding:16px 0}
+    .carousel{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg-soft)}
     .frame{position:relative;width:100%;aspect-ratio:16/9}
-    .track{position:relative;width:100%;height:100%}
-    .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
-    .slide.active{opacity:1}
+    .track{display:flex;height:100%;transition:transform .5s ease;will-change:transform}
+    .slide{min-width:100%;height:100%;position:relative}
     .slide img{width:100%;height:100%;object-fit:cover;object-position:center}
-    .caption{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:13px}
-    @media(min-width:640px){.caption{font-size:14px}}
-    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 6px;pointer-events:none}
+    .caption{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,.25)}
+    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;pointer-events:none;padding:0 6px}
     .ctrl button{pointer-events:auto;background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.25);width:38px;height:38px;border-radius:999px}
-    .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
-    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.55);border:none}
-    .dot.active{background:#fff}
-    .slide-error{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;color:#991b1b;background:#fee2e2}
 
-    /* SECTIONS */
+    /* Sections */
     .section{padding:16px 0}
     .section h2{margin:0 0 10px}
-    .cards{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:640px){.cards{grid-template-columns:repeat(2,1fr)}}
-    .cards-3{display:grid;grid-template-columns:1fr;gap:12px}
+    .grid{display:grid;gap:12px}
+    .cards-3{grid-template-columns:1fr}
     @media(min-width:900px){.cards-3{grid-template-columns:repeat(3,1fr)}}
+    .cards-2{grid-template-columns:1fr}
+    @media(min-width:640px){.cards-2{grid-template-columns:repeat(2,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
     .muted{color:var(--muted)}
+    .chip{font-size:.85rem;padding:.25rem .5rem;border-radius:.5rem;border:1px solid var(--border);background:var(--bg-soft)}
+    input.btn, select.btn{background:#fff}
 
     footer{border-top:1px solid var(--border);padding:26px 0 40px;color:var(--muted)}
     .foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
-    /* MOBILE NAV fine-tune */
-    @media (max-width:480px){
-      .brand img{width:30px;height:30px}
-      .brand span{font-size:16px;max-width:56vw}
-      .btn{padding:8px 12px;font-size:14px}
-    }
-    @media (max-width:360px){
-      .brand span{font-size:15px;max-width:58vw}
-      .btn{padding:7px 10px;font-size:13px}
+    /* Small tweaks mobile */
+    @media(max-width:480px){
+      .brand img{width:30px;height:30px} .brand span{font-size:16px;max-width:58vw}
+      .btn{padding:7px 10px;font-size:14px}
+      .caption{font-size:12px}
     }
   </style>
 </head>
 <body>
-  <!-- NAVBAR -->
-  <nav class="nav">
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navigasi">
     <div class="container nav-inner">
-      <div class="brand"><img src="jm.jpeg" alt="JM"><span>Jepang Mengaji</span></div>
-      <div class="nav-links">
-        <a class="btn ghost" href="#top">Home</a>
-        <a class="btn ghost" href="#updates">Info Terbaru</a>
-        <a class="btn ghost" href="#urgent">Penting</a>
-        <a class="btn ghost" href="#artikel">Artikel</a>
-        <a class="btn ghost" href="#donasi">Donasi</a>
-        <a class="btn btn-primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Arsip YouTube</a>
-      </div>
+      <a class="brand" href="#top" aria-label="Beranda">
+        <img src="jm.jpeg" alt="JM"/><span>Jepang Mengaji</span>
+      </a>
+      <div class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a class="btn ghost" href="#updates">Info Terbaru</a></li>
+        <li><a class="btn ghost" href="#urgent">Penting</a></li>
+        <li><a class="btn ghost" href="#artikel">Artikel</a></li>
+        <li><a class="btn" href="#donasi">Donasi</a></li>
+        <li><a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Arsip YouTube</a></li>
+      </ul>
     </div>
   </nav>
 
-  <div class="container layout">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="sidecard">
-        <h3>Navigasi</h3>
-        <a href="#updates">🆕 Info Terbaru</a>
-        <a href="#urgent">⚠️ Pengumuman Penting</a>
-        <a href="#artikel">📖 Artikel</a>
-        <a href="#donasi">❤️ Donasi & Konfirmasi</a>
-        <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
-        <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
-        <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO?mode=ac_t" target="_blank" rel="noopener">📲 WhatsApp Group</a>
-        <a href="https://t.me/jepangmengaji_channel" target="_blank" rel="noopener">📣 Telegram Channel</a>
-        <a href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
+  <!-- HEADER ala channel -->
+  <header class="channel" role="banner">
+    <div class="banner"></div>
+    <div class="container channel-bar">
+      <img class="avatar" src="jm.jpeg" alt="Logo Jepang Mengaji"/>
+      <div class="ch-meta">
+        <h1 class="ch-title">Jepang Mengaji</h1>
+        <p class="ch-sub">Mengaji sesuai Sunnah • Kajian, artikel, dokumentasi & donasi</p>
       </div>
-    </aside>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390?sub_confirmation=1" target="_blank" rel="noopener">Subscribe</a>
+        <a class="btn" href="#donasi">Donasi</a>
+      </div>
+    </div>
+  </header>
 
-    <main>
-      <!-- HERO: Slideshow -->
-      <section class="hero" aria-label="Dokumentasi kegiatan">
-        <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Foto Kegiatan">
+  <main>
+    <!-- HERO: Slideshow -->
+    <section class="hero" aria-label="Dokumentasi kegiatan">
+      <div class="container">
+        <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="Foto Kegiatan">
           <div class="frame">
-            <div class="track" id="track"></div>
+            <div class="track" id="track">
+              <!-- Fallback: pakai file lokal -->
+              <figure class="slide"><img src="assets/slides/1.jpeg" alt="Kegiatan 1"><figcaption class="caption">Kegiatan 1</figcaption></figure>
+              <figure class="slide"><img src="assets/slides/2.jpeg" alt="Kegiatan 2"><figcaption class="caption">Kegiatan 2</figcaption></figure>
+              <figure class="slide"><img src="assets/slides/3.jpeg" alt="Kegiatan 3"><figcaption class="caption">Kegiatan 3</figcaption></figure>
+            </div>
             <div class="ctrl"><button id="prev" aria-label="Sebelumnya">‹</button><button id="next" aria-label="Berikutnya">›</button></div>
-            <div class="dots" id="dots"></div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- DONASI & KONFIRMASI -->
-      <section id="donasi" class="section">
-        <div class="cards">
-          <div class="card">
-            <h3>❤️ Donasi Kegiatan</h3>
-            <p class="muted">Dukung dakwah: operasional, dokumentasi, dan penyelenggaraan kajian.</p>
-            <ul class="muted" style="line-height:1.7;margin:.4rem 0">
-              <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> — <strong id="rek-jenius">90220139952</strong> <button class="btn btn-outline" data-copy="#rek-jenius">Salin</button></li>
-              <li>Yucho Ginko a.n. <em>トリサンボド</em> — <strong id="rek-yucho">14660-20688191</strong> <button class="btn btn-outline" data-copy="#rek-yucho">Salin</button></li>
-            </ul>
-            <div class="btn-stack" style="margin-top:6px">
-              <a class="btn btn-primary btn-lg" href="#konfirmasi">✅ Konfirmasi Transfer</a>
-              <a class="btn btn-outline btn-lg" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
-            </div>
+    <!-- DONASI & KONFIRMASI -->
+    <section id="donasi" class="section">
+      <div class="container grid cards-2" style="align-items:start">
+        <article class="card">
+          <h3>❤️ Donasi Kegiatan</h3>
+          <p class="muted">Dukung dakwah: operasional, dokumentasi, dan penyelenggaraan kajian.</p>
+          <ul class="muted" style="line-height:1.7;margin:.4rem 0">
+            <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> —
+              <strong id="rek-jenius">90220139952</strong> <button class="chip" data-copy="#rek-jenius">Salin</button>
+            </li>
+            <li>Yucho Ginko a.n. <em>トリサンボド</em> —
+              <strong id="rek-yucho">14660-20688191</strong> <button class="chip" data-copy="#rek-yucho">Salin</button>
+            </li>
+          </ul>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+            <a class="btn primary" href="donasi.html">💳 Link Donasi</a>
+            <a class="btn" href="#konfirmasi">✅ Konfirmasi Transfer</a>
           </div>
+        </article>
 
-          <div class="card" id="konfirmasi">
-            <h3>✅ Konfirmasi Transfer</h3>
-            <p class="muted">Kirim format singkat via WhatsApp atau Email (otomatis tersusun).</p>
-            <div style="display:grid;gap:10px;grid-template-columns:1fr 1fr">
-              <input class="input" id="kf-nama" placeholder="Nama"/>
-              <input class="input" id="kf-nominal" placeholder="Nominal (cth 100000)"/>
-              <input class="input" id="kf-tanggal" type="date"/>
-              <select class="input" id="kf-bank">
-                <option value="">Transfer ke</option><option>SMBC / Jenius</option><option>Yucho</option>
-              </select>
-            </div>
-            <div class="btn-stack" style="margin-top:10px">
-              <button class="btn btn-primary btn-lg" id="btnWA">Kirim via WhatsApp</button>
-              <a class="btn btn-outline btn-lg" id="btnEmail" href="#">Kirim via Email</a>
-            </div>
+        <article class="card" id="konfirmasi">
+          <h3>✅ Konfirmasi Transfer</h3>
+          <p class="muted">Kirim format singkat via WhatsApp atau Email (otomatis tersusun).</p>
+          <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr">
+            <input class="btn" id="kf-nama" placeholder="Nama">
+            <input class="btn" id="kf-nominal" placeholder="Nominal (cth 100000)">
+            <input class="btn" id="kf-tanggal" type="date">
+            <select class="btn" id="kf-bank">
+              <option value="">Transfer ke</option>
+              <option>SMBC / Jenius</option><option>Yucho</option>
+            </select>
           </div>
-        </div>
-      </section>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn primary" id="btnWA">Kirim via WhatsApp</button>
+            <a class="btn" id="btnEmail" href="#">Kirim via Email</a>
+          </div>
+        </article>
+      </div>
+    </section>
 
-      <!-- INFO TERBARU -->
-      <section id="updates" class="section">
+    <!-- INFO TERBARU -->
+    <section id="updates" class="section">
+      <div class="container">
         <h2>Info Terbaru</h2>
-        <div id="updatesList" class="cards-3"></div>
-      </section>
+        <div id="updatesList" class="grid cards-3"></div>
+      </div>
+    </section>
 
-      <!-- PENGUMUMAN PENTING -->
-      <section id="urgent" class="section" style="background:var(--bg-soft);border:1px solid var(--border);border-radius:12px;padding:16px">
+    <!-- PENGUMUMAN PENTING -->
+    <section id="urgent" class="section" style="background:var(--bg-soft);">
+      <div class="container">
         <h2>Pengumuman Penting</h2>
-        <div id="urgentList" class="cards"></div>
-      </section>
+        <div id="urgentList" class="grid cards-2"></div>
+      </div>
+    </section>
 
-      <!-- ARTIKEL -->
-      <section id="artikel" class="section">
+    <!-- ARTIKEL -->
+    <section id="artikel" class="section">
+      <div class="container">
         <h2>Artikel</h2>
-        <div id="articlesList" class="cards-3"></div>
-      </section>
-    </main>
-  </div>
+        <div id="articlesList" class="grid cards-3"></div>
+      </div>
+    </section>
+  </main>
 
   <footer>
     <div class="container foot">
       <div>© <span id="year"></span> Jepang Mengaji</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <span class="muted">Design by Wahyu</span>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <span class="muted chip">Design by Wahyu</span>
         <a class="muted" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
-        <a class="muted" href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
+        <a class="muted" href="#top">↑ Ke atas</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Tahun footer
+    // ===== YEAR
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Copy nomor rekening
+    // ===== Burger
+    const menuBtn=document.getElementById('menuBtn');
+    const navLinks=document.getElementById('navLinks');
+    menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('.nav') && navLinks.classList.contains('open')) navLinks.classList.remove('open');
+    });
+
+    // ===== Copy rekening
     function copySel(sel){
       const el=document.querySelector(sel);
       if(!el) return;
       navigator.clipboard.writeText(el.textContent.trim()).then(()=>alert('Nomor rekening tersalin'),()=>alert('Gagal menyalin'));
     }
     document.addEventListener('click',e=>{
-      const btn=e.target.closest('[data-copy]');
-      if(!btn) return;
+      const btn=e.target.closest('.chip[data-copy]'); if(!btn) return;
       copySel(btn.getAttribute('data-copy'));
     });
 
-    // Konfirmasi Transfer
+    // ===== Konfirmasi Transfer (WA/Email)
     function buildKonfirmasi(){
       const nama=(document.getElementById('kf-nama')||{}).value||'';
       const nominal=(document.getElementById('kf-nominal')||{}).value||'';
@@ -264,70 +273,42 @@
       e.currentTarget.href=`mailto:jepangmengaji@gmail.com?subject=Konfirmasi%20Transfer&body=${body}`;
     });
 
-    // SLIDESHOW (slides.json → fallback assets/slides/1-3.jpeg)
-    const SLIDES_JSON_URL = 'slides.json';
-    const fallbackSlides = [
-      { src: "assets/slides/1.jpeg", caption: "Kegiatan 1" },
-      { src: "assets/slides/2.jpeg", caption: "Kegiatan 2" },
-      { src: "assets/slides/3.jpeg", caption: "Kegiatan 3" }
-    ];
-    async function loadSlidesJson() {
-      try{
-        const res = await fetch(SLIDES_JSON_URL + '?_=' + Date.now(), { cache: 'no-store' });
-        if(!res.ok) throw new Error('HTTP '+res.status);
-        const data = await res.json();
-        return Array.isArray(data)&&data.length?data:null;
-      }catch(e){ return null; }
-    }
-    function showSlideError(msg){
-      const track = document.getElementById('track');
-      if(!track) return;
-      track.innerHTML = `<div class="slide-error">
-        <div><strong>Slideshow tidak dapat memuat gambar.</strong><br/><small>${msg}</small></div>
-      </div>`;
-    }
-    async function initSlideshow(){
-      const track = document.getElementById('track');
-      const dots  = document.getElementById('dots');
-      const nextB = document.getElementById('next');
-      const prevB = document.getElementById('prev');
-      if(!track || !dots) return;
+    // ===== Carousel
+    const track=document.getElementById('track');
+    const slides=Array.from(track.children);
+    const prev=document.getElementById('prev');
+    const next=document.getElementById('next');
+    let index=0, timer=null, touchStartX=0, dragging=false;
 
-      const slidesData = (await loadSlidesJson()) || fallbackSlides;
-      if(!slidesData?.length){ showSlideError('Tambahkan slides.json atau file fallback.'); return; }
+    function go(i){ index=(i+slides.length)%slides.length; track.style.transform=`translateX(${-index*100}%)`; }
+    function nextSlide(){ go(index+1); }
+    function prevSlide(){ go(index-1); }
+    function restart(){ clearInterval(timer); timer=setInterval(nextSlide, 5000); }
 
-      track.innerHTML=''; dots.innerHTML='';
-      slidesData.forEach((f,i)=>{
-        const fig=document.createElement('figure'); fig.className='slide'+(i===0?' active':'');
-        const cap=f.caption||('Kegiatan '+(i+1));
-        fig.innerHTML=`<img src="${f.src}" alt="${cap}"><figcaption class="caption">${cap}</figcaption>`;
-        track.appendChild(fig);
-        const d=document.createElement('button'); d.className='dot'+(i===0?' active':''); d.addEventListener('click',()=>go(i,true)); dots.appendChild(d);
-      });
+    next.addEventListener('click',()=>{ nextSlide(); restart(); });
+    prev.addEventListener('click',()=>{ prevSlide(); restart(); });
 
-      let idx=0,timer=null; const slides=[...track.children];
-      const show=i=>{ slides.forEach((s,j)=>s.classList.toggle('active',i===j)); [...dots.children].forEach((d,j)=>d.classList.toggle('active',i===j)); };
-      const go=(i,u)=>{ idx=(i+slides.length)%slides.length; show(idx); if(u){clearInterval(timer); timer=setInterval(next,5000);} };
-      const next=()=>go(idx+1); const prev=()=>go(idx-1,true);
-      nextB?.addEventListener('click',next); prevB?.addEventListener('click',prev);
-      clearInterval(timer); timer=setInterval(next,5000);
-    }
-    initSlideshow();
+    // swipe
+    track.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX; dragging=true; clearInterval(timer);},{passive:true});
+    track.addEventListener('touchend',e=>{ if(!dragging) return; dragging=false; const dx=e.changedTouches[0].clientX-touchStartX; if(Math.abs(dx)>60){ dx<0?nextSlide():prevSlide(); } else { go(index); } restart();},{passive:true});
+    restart();
 
-    // CSV helpers + sections
-    const ARTICLES_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
-    const INFO_CSV_URL     = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
-    const URGENT_CSV_URL   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
+    // ===== Data sources (Google Sheets CSV)
+    const ARTICLES_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
+    const INFO_CSV_URL    ="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
+    const URGENT_CSV_URL  ="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
+
     async function fetchCSV(url){
-      const res = await fetch(url + (url.includes("?") ? "&" : "?") + "_=" + Date.now());
-      const text = (await res.text()).replace(/^\uFEFF/,'');
+      const res=await fetch(url+(url.includes('?')?'&':'?')+'_'+Date.now());
+      const text=(await res.text()).replace(/^\\uFEFF/,'');
       const rows=[]; let row=[],cell='',inQuotes=false;
       for(let i=0;i<text.length;i++){
-        const c=text[i],n=text[i+1];
-        if(c=='"'){ if(inQuotes&&n=='"'){cell+='"';i++;} else inQuotes=!inQuotes; }
-        else if(c===','&&!inQuotes){ row.push(cell); cell=''; }
-        else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){ if(c==='\r') i++; row.push(cell); cell=''; if(row.length) rows.push(row); row=[]; }
-        else{ cell+=c; }
+        const c=text[i], n=text[i+1];
+        if(c=='\"'){ if(inQuotes && n=='\"'){ cell+='\"'; i++; } else inQuotes=!inQuotes; }
+        else if(c===',' && !inQuotes){ row.push(cell); cell=''; }
+        else if((c==='\\n' || (c==='\\r'&&n==='\\n')) && !inQuotes){
+          if(c==='\\r') i++; row.push(cell); cell=''; if(row.length) rows.push(row); row=[];
+        } else { cell+=c; }
       }
       if(cell||row.length){ row.push(cell); rows.push(row); }
       const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
@@ -335,17 +316,43 @@
     }
     const pick=(o,keys)=>{ for(const k of keys){ const v=o[k]; if(v && String(v).trim()) return String(v).trim(); } return ""; };
 
-    function cardList(containerId, items, limit=6){
-      const wrap=document.getElementById(containerId); wrap.innerHTML='';
-      if(!items.length){ wrap.innerHTML='<div class="card"><p class="muted">Belum ada data.</p></div>'; return; }
-      items.slice(0,limit).forEach(it=>{
-        const dateTxt = it.date ? new Date(it.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}) : '';
+    function renderUpdates(list){
+      const wrap=document.getElementById('updatesList'); wrap.innerHTML='';
+      if(!list.length){ wrap.innerHTML='<div class="card muted">Belum ada info / gagal memuat.</div>'; return; }
+      list.slice(0,6).forEach(it=>{
         const el=document.createElement('article'); el.className='card';
-        el.innerHTML = `
+        el.innerHTML=`
           <h3 style="margin:.2rem 0">${it.title||'Info'}</h3>
           ${it.desc?`<p class="muted" style="margin:.2rem 0">${it.desc}</p>`:''}
-          ${dateTxt?`<div class="muted">${dateTxt}</div>`:''}
-          ${it.href?`<div class="btn-stack" style="margin-top:8px"><a class="btn btn-outline" href="${it.href}" ${/^https?:/i.test(it.href)?'target="_blank" rel="noopener"':''}>Baca</a></div>`:''}
+          <div class="muted">${it.date?new Date(it.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
+          ${it.href?`<a class="btn" style="margin-top:8px" href="${it.href}" ${/^https?:/i.test(it.href)?'target="_blank" rel="noopener"':''}>Baca</a>`:''}
+        `;
+        wrap.appendChild(el);
+      });
+    }
+    function renderUrgent(list){
+      const wrap=document.getElementById('urgentList'); wrap.innerHTML='';
+      if(!list.length){ wrap.innerHTML='<div class="card muted">Belum ada pengumuman / set dulu sheet Penting.</div>'; return; }
+      list.slice(0,4).forEach(it=>{
+        const el=document.createElement('article'); el.className='card';
+        el.innerHTML=`
+          <h3 style="margin:.2rem 0">${it.title||'Pengumuman'}</h3>
+          ${it.desc?`<p class="muted" style="margin:.2rem 0">${it.desc}</p>`:''}
+          <div class="muted">${it.date?new Date(it.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
+        `;
+        wrap.appendChild(el);
+      });
+    }
+    function renderArticles(list){
+      const wrap=document.getElementById('articlesList'); wrap.innerHTML='';
+      if(!list.length){ wrap.innerHTML='<div class="card muted">Belum ada artikel / gagal memuat.</div>'; return; }
+      list.slice(0,6).forEach(a=>{
+        const el=document.createElement('article'); el.className='card';
+        el.innerHTML=`
+          <h3 style="margin:.2rem 0">${a.title||''}</h3>
+          ${a.excerpt?`<p class="muted" style="margin:.2rem 0">${a.excerpt}</p>`:''}
+          <div class="muted">${a.date?new Date(a.date).toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}):''}</div>
+          ${a.href?`<a class="btn" style="margin-top:8px" href="${a.href}" ${/^https?:/i.test(a.href)?'target="_blank" rel="noopener"':''}>Baca</a>`:''}
         `;
         wrap.appendChild(el);
       });
@@ -353,41 +360,68 @@
 
     async function loadSections(){
       try{
-        const rows = await fetchCSV(INFO_CSV_URL);
-        const items = rows.map(r=>({
-          title: pick(r,['judul','title','nama']),
-          date : pick(r,['tanggal','date','tgl','waktu']),
-          href : pick(r,['href','link','url']),
-          desc : pick(r,['konten','content','deskripsi','desc','ringkasan'])
+        const rows=await fetchCSV(INFO_CSV_URL);
+        const items=rows.map(r=>({
+          title:pick(r,['judul','title','nama']),
+          date: pick(r,['tanggal','date','tgl','waktu']),
+          href: pick(r,['href','link','url']),
+          desc: pick(r,['konten','content','deskripsi','desc','ringkasan'])
         })).filter(x=>x.title||x.desc||x.href)
           .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-        cardList('updatesList', items, 9);
-      }catch(e){ cardList('updatesList', [], 0); }
+        renderUpdates(items);
+      }catch(e){ console.warn('Info error',e); renderUpdates([]); }
 
       try{
-        const rows = await fetchCSV(URGENT_CSV_URL);
-        const items = rows.map(r=>({
-          title: pick(r,['judul','title','pengumuman']),
-          date : pick(r,['tanggal','date','tgl']),
-          desc : pick(r,['konten','content','deskripsi','desc','ringkasan'])
+        const rows=await fetchCSV(URGENT_CSV_URL);
+        const items=rows.map(r=>({
+          title:pick(r,['judul','title','pengumuman']),
+          date: pick(r,['tanggal','date','tgl']),
+          desc: pick(r,['konten','content','deskripsi','desc','ringkasan'])
         })).filter(x=>x.title||x.desc)
           .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-        cardList('urgentList', items, 6);
-      }catch(e){ cardList('urgentList', [], 0); }
+        renderUrgent(items);
+      }catch(e){ console.warn('Urgent error',e); renderUrgent([]); }
 
       try{
-        const rows = await fetchCSV(ARTICLES_CSV_URL);
-        const items = rows.map(r=>({
+        const rows=await fetchCSV(ARTICLES_CSV_URL);
+        const items=rows.map(r=>({
           title: pick(r,['title','judul','nama','artikel']),
-          date : pick(r,['date','tanggal','published','tgl']),
-          href : pick(r,['href','link','url']),
-          desc : pick(r,['excerpt','ringkasan','deskripsi','desc','konten','content'])
+          excerpt: pick(r,['excerpt','ringkasan','deskripsi','desc','konten','content']),
+          date: pick(r,['date','tanggal','published','tgl']),
+          href: pick(r,['href','link','url'])
         })).filter(x=>x.title||x.href)
           .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-        cardList('articlesList', items, 9);
-      }catch(e){ cardList('articlesList', [], 0); }
+        renderArticles(items);
+      }catch(e){ console.warn('Artikel error',e); renderArticles([]); }
     }
     loadSections();
+
+    /* OPTIONAL: pakai slides.json untuk kontrol slideshow
+       Buat file slides.json di root repo dengan format:
+       [
+         {"src":"assets/slides/1.jpeg","caption":"Kegiatan 1"},
+         {"src":"assets/slides/2.jpeg","caption":"Kegiatan 2"}
+       ]
+       Aktifkan kode ini kalau mau override fallback:
+    */
+    (async function trySlidesJson(){
+      try{
+        const res=await fetch('slides.json?_'+Date.now());
+        if(!res.ok) return;
+        const data=await res.json();
+        if(!Array.isArray(data)||!data.length) return;
+        const t=document.getElementById('track');
+        t.innerHTML='';
+        data.forEach((s,i)=>{
+          const fig=document.createElement('figure');
+          fig.className='slide';
+          fig.innerHTML=`<img src="${s.src}" alt="${s.caption||('Kegiatan '+(i+1))}"><figcaption class="caption">${s.caption||('Kegiatan '+(i+1))}</figcaption>`;
+          t.appendChild(fig);
+        });
+        // reset index
+        go(0);
+      }catch(_){ /* gunakan fallback */ }
+    })();
   </script>
 </body>
 </html>
