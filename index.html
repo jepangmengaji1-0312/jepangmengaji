@@ -11,21 +11,21 @@
       --muted:#6b7280; --border:#e5e7eb;
       --primary:#ef4444; --shadow:0 4px 20px rgba(0,0,0,.08);
     }
-    body{margin:0;font-family:system-ui,Arial;background:var(--bg);color:var(--text);min-height:100vh;position:relative}
+    body{margin:0;font-family:system-ui,Arial;background:var(--bg);color:var(--text)}
     body::before{
       content:""; position:fixed; inset:0; z-index:-1;
       background:linear-gradient(rgba(255,255,255,.94),rgba(255,255,255,.94)),
-        url("jm.jpeg") center/50% no-repeat;
+        url("jm.jpeg") center/40% no-repeat;
       opacity:.15;
     }
     a{text-decoration:none;color:inherit}
     .container{max-width:1100px;margin:0 auto;padding:0 1rem}
 
     /* NAV */
-    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0}
     .brand{display:flex;align-items:center;gap:.5rem;font-weight:700}
-    .brand img{width:34px;height:34px;border-radius:50%}
+    .brand img{width:32px;height:32px;border-radius:50%}
     .menu-toggle{display:none;cursor:pointer;font-size:22px;margin-right:.5rem}
     .nav-links{display:flex;gap:.5rem;align-items:center}
     .nav-links a{padding:.35rem .7rem;border:1px solid var(--border);border-radius:999px;white-space:nowrap}
@@ -44,6 +44,18 @@
     .card{border:1px solid var(--border);border-radius:.75rem;padding:1rem;background:#fff;box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
 
+    /* Carousel */
+    .carousel{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .frame{width:100%;aspect-ratio:16/9;overflow:hidden}
+    .track{display:flex;height:100%;transition:transform .5s ease}
+    .slide{min-width:100%;height:100%}
+    .slide img{width:100%;height:100%;object-fit:cover}
+    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+    .ctrl button{pointer-events:auto;background:rgba(0,0,0,.5);color:#fff;border:none;width:40px;height:40px;border-radius:50%}
+    .dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5)}
+    .dot.active{background:#fff}
+
     footer{border-top:1px solid var(--border);padding:1rem 0;text-align:center;font-size:.9rem;color:var(--muted)}
   </style>
 </head>
@@ -59,31 +71,33 @@
         <a href="#info">Info Terbaru</a>
         <a href="#urgent">Penting</a>
         <a href="#artikel">Artikel</a>
+        <a href="#kajian">Kajian</a>
         <a class="primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank">Arsip YouTube</a>
       </div>
     </div>
   </nav>
 
   <main class="container">
-    <!-- INFO -->
-    <section id="info">
-      <h2>Info Terbaru</h2>
-      <div id="infoList" class="grid grid-3"></div>
+    <!-- Slideshow -->
+    <section id="slideshow">
+      <div class="carousel">
+        <div class="frame">
+          <div class="track" id="track">
+            <div class="slide"><img src="assets/slides/1.jpeg" alt="Slide 1"></div>
+            <div class="slide"><img src="assets/slides/2.jpeg" alt="Slide 2"></div>
+            <div class="slide"><img src="assets/slides/3.jpeg" alt="Slide 3"></div>
+          </div>
+          <div class="ctrl"><button id="prev">‹</button><button id="next">›</button></div>
+          <div class="dots" id="dots"></div>
+        </div>
+      </div>
     </section>
 
-    <!-- PENTING -->
-    <section id="urgent">
-      <h2>Pengumuman Penting</h2>
-      <div id="urgentList" class="grid grid-3"></div>
-    </section>
+    <section id="info"><h2>Info Terbaru</h2><div id="infoList" class="grid grid-3"></div></section>
+    <section id="urgent"><h2>Pengumuman Penting</h2><div id="urgentList" class="grid grid-3"></div></section>
+    <section id="artikel"><h2>Artikel</h2><div id="articlesList" class="grid grid-3"></div></section>
+    <section id="kajian"><h2>Kajian</h2><div id="kajianList" class="grid grid-3"></div></section>
 
-    <!-- ARTIKEL -->
-    <section id="artikel">
-      <h2>Artikel</h2>
-      <div id="artikelList" class="grid grid-3"></div>
-    </section>
-
-    <!-- DONASI -->
     <section id="donasi">
       <h2>Donasi</h2>
       <div class="grid grid-3">
@@ -97,59 +111,78 @@
         </div>
         <div class="card">
           <h3>✅ Konfirmasi Transfer</h3>
-          <input placeholder="Nama" style="width:100%;margin:.3rem 0;padding:.4rem"/>
-          <input placeholder="Nominal" style="width:100%;margin:.3rem 0;padding:.4rem"/>
-          <input type="date" style="width:100%;margin:.3rem 0;padding:.4rem"/>
-          <select style="width:100%;margin:.3rem 0;padding:.4rem">
-            <option>SMBC/Jenius</option><option>Yucho</option>
-          </select>
-          <button style="margin-top:.5rem;padding:.5rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:.5rem">Kirim via WhatsApp</button>
+          <input id="nama" placeholder="Nama" style="width:100%;margin:.3rem 0;padding:.4rem"/>
+          <input id="nominal" placeholder="Nominal" style="width:100%;margin:.3rem 0;padding:.4rem"/>
+          <input id="tgl" type="date" style="width:100%;margin:.3rem 0;padding:.4rem"/>
+          <select id="bank" style="width:100%;margin:.3rem 0;padding:.4rem"><option>SMBC/Jenius</option><option>Yucho</option></select>
+          <button id="btnWA" style="margin-top:.5rem;padding:.5rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:.5rem">Kirim via WhatsApp</button>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    © 2025 Jepang Mengaji • Design by Wahyu
-  </footer>
+  <footer>© 2025 Jepang Mengaji • Design by Wahyu</footer>
 
   <script>
-    // burger toggle
+    // burger
     document.getElementById('menuBtn').onclick=()=>document.getElementById('navLinks').classList.toggle('show');
 
-    const INFO_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
-    const URGENT_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
-    const ARTIKEL_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
+    // WA konfirmasi
+    document.getElementById('btnWA').onclick=()=>{
+      const nama=document.getElementById('nama').value;
+      const nominal=document.getElementById('nominal').value;
+      const tgl=document.getElementById('tgl').value;
+      const bank=document.getElementById('bank').value;
+      const msg=`Assalamu'alaikum, saya konfirmasi donasi.\nNama: ${nama}\nNominal: ${nominal}\nTanggal: ${tgl}\nBank: ${bank}`;
+      window.open(`https://wa.me/817084810427?text=${encodeURIComponent(msg)}`);
+    };
+
+    // carousel
+    const track=document.getElementById('track');
+    const slides=Array.from(track.children);
+    const prev=document.getElementById('prev');
+    const next=document.getElementById('next');
+    const dotsWrap=document.getElementById('dots');
+    let index=0,timer=null;
+    function buildDots(){dotsWrap.innerHTML='';slides.forEach((_,i)=>{const d=document.createElement('button');d.className='dot'+(i===index?' active':'');d.onclick=()=>go(i,true);dotsWrap.appendChild(d);});}
+    function go(i,user){index=(i+slides.length)%slides.length;track.style.transform=`translateX(${-index*100}%)`;Array.from(dotsWrap.children).forEach((el,di)=>el.classList.toggle('active',di===index));if(user) restart();}
+    function nextSlide(){go(index+1,false)};function prevSlide(){go(index-1,true)};function restart(){clearInterval(timer);timer=setInterval(nextSlide,5000);}
+    next.onclick=nextSlide;prev.onclick=prevSlide;buildDots();restart();
+
+    // CSV URL
+    const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
+    const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=450885199&single=true&output=csv";
+    const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
+    const PENTING="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
 
     async function fetchCSV(url){
       try{
         const res=await fetch(url+"&_="+Date.now());
         const text=await res.text();
-        const rows=text.split(/\r?\n/).map(r=>r.split(","));
-        const head=rows.shift().map(h=>h.toLowerCase());
+        const [head,...rows]=text.split(/\r?\n/).map(r=>r.split(","));
+        const headers=head.map(h=>h.trim().toLowerCase());
         return rows.filter(r=>r.some(c=>c.trim()!=="")).map(r=>{
-          let o={}; head.forEach((h,i)=>o[h]=r[i]); return o;
+          let o={};headers.forEach((h,i)=>o[h]=r[i]);return o;
         });
-      }catch(e){console.error(e); return [];}
+      }catch(e){console.error(e);return [];}
     }
     function render(list,id){
-      const wrap=document.getElementById(id);
-      wrap.innerHTML="";
+      const wrap=document.getElementById(id);wrap.innerHTML="";
       if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada data / gagal memuat.</div>';return;}
-      list.forEach(it=>{
-        const div=document.createElement("div");
-        div.className="card";
-        div.innerHTML=`<h3>${it.judul||it.title||'Info'}</h3>
-          ${it.konten||it.content||it.excerpt?'<p class="muted">'+(it.konten||it.content||it.excerpt)+'</p>':""}
-          ${it.tanggal||it.date?'<div class="muted">'+it.tanggal||it.date+'</div>':""}
-          ${it.href||it.link?'<a href="'+(it.href||it.link)+'" target="_blank">Baca</a>':""}`;
-        wrap.appendChild(div);
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${r.judul||r.title||"Info"}</h3>
+          ${r.excerpt||r.konten?'<p class="muted">'+(r.excerpt||r.konten)+'</p>':""}
+          ${r.date||r.tanggal?'<div class="muted">'+(r.date||r.tanggal)+'</div>':""}
+          ${r.href?'<a class="btn" href="'+r.href+'" target="_blank">Baca</a>':""}`;
+        wrap.appendChild(c);
       });
     }
     (async()=>{
-      render(await fetchCSV(INFO_CSV),"infoList");
-      render(await fetchCSV(URGENT_CSV),"urgentList");
-      render(await fetchCSV(ARTIKEL_CSV),"artikelList");
+      render(await fetchCSV(INFO),"infoList");
+      render(await fetchCSV(PENTING),"urgentList");
+      render(await fetchCSV(ARTICLES),"articlesList");
+      render(await fetchCSV(KAJIAN),"kajianList");
     })();
   </script>
 </body>
