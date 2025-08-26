@@ -43,6 +43,15 @@
     .grid-2{display:grid;gap:16px}
     @media(min-width:768px){.grid-2{grid-template-columns:1fr 1fr}}
     footer{border-top:1px solid var(--border);padding:16px;margin-top:40px;color:var(--muted);text-align:center}
+
+    /* SLIDESHOW */
+    .slideshow{position:relative;overflow:hidden;border-radius:12px;border:1px solid var(--border)}
+    .slide{display:none}
+    .slide img{width:100%;height:450px;object-fit:cover}
+    .slide.active{display:block}
+    .dots{display:flex;justify-content:center;gap:6px;padding:8px}
+    .dot{width:10px;height:10px;border-radius:50%;background:#ddd;cursor:pointer}
+    .dot.active{background:var(--primary)}
   </style>
 </head>
 <body>
@@ -62,6 +71,16 @@
   </nav>
 
   <main class="container">
+    <!-- SLIDESHOW -->
+    <section id="slideshow">
+      <div class="slideshow" id="slideshowBox">
+        <div class="slide active"><img src="assets/slides/1.jpeg" alt="Kegiatan 1"></div>
+        <div class="slide"><img src="assets/slides/2.jpeg" alt="Kegiatan 2"></div>
+        <div class="slide"><img src="assets/slides/3.jpeg" alt="Kegiatan 3"></div>
+      </div>
+      <div class="dots" id="dots"></div>
+    </section>
+
     <section id="info"><h2>Info Terbaru</h2><div id="infoList" class="cards"></div></section>
     <section id="urgent"><h2>Pengumuman Penting</h2><div id="urgentList" class="cards"></div></section>
     <section id="artikel"><h2>Artikel</h2><div id="artikelList" class="cards"></div></section>
@@ -98,12 +117,12 @@
     menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
 
     // Konfirmasi WA
-    const nama=document.getElementById('nama');
-    const nominal=document.getElementById('nominal');
-    const tgl=document.getElementById('tgl');
-    const bank=document.getElementById('bank');
     document.getElementById('btnWA').onclick=()=>{
-      const msg=`Assalamu'alaikum, saya konfirmasi donasi.\nNama: ${nama.value}\nNominal: ${nominal.value}\nTanggal: ${tgl.value}\nBank: ${bank.value}`;
+      const nama=document.getElementById('nama').value;
+      const nominal=document.getElementById('nominal').value;
+      const tgl=document.getElementById('tgl').value;
+      const bank=document.getElementById('bank').value;
+      const msg=`Assalamu'alaikum, saya konfirmasi donasi.\nNama: ${nama}\nNominal: ${nominal}\nTanggal: ${tgl}\nBank: ${bank}`;
       window.open(`https://wa.me/817084810427?text=${encodeURIComponent(msg)}`);
     };
 
@@ -136,6 +155,18 @@
       render(await fetchCSV(URGENT),'urgentList');
       render(await fetchCSV(ARTIKEL),'artikelList');
     })();
+
+    // SLIDESHOW
+    let idx=0;
+    const slides=document.querySelectorAll('.slide');
+    const dotsWrap=document.getElementById('dots');
+    function showSlide(n){
+      slides.forEach((s,i)=>s.classList.toggle('active',i===n));
+      [...dotsWrap.children].forEach((d,i)=>d.classList.toggle('active',i===n));
+    }
+    function nextSlide(){ idx=(idx+1)%slides.length;showSlide(idx); }
+    slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>{idx=i;showSlide(idx)};dotsWrap.appendChild(d)});
+    setInterval(nextSlide,5000);
   </script>
 </body>
 </html>
