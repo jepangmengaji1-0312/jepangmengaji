@@ -175,15 +175,22 @@
       }catch(e){console.error(e);return [];}
     }
 
+    function pick(obj,keys){
+      for(const k of keys){
+        if(obj[k] && obj[k].trim()) return obj[k].trim();
+      }
+      return "";
+    }
+
     function render(list,id){
       const wrap=document.getElementById(id);wrap.innerHTML="";
       if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada data / gagal memuat.</div>';return;}
       list.forEach(r=>{
         const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${r.judul||r.title||"Info"}</h3>
-          ${r.excerpt||r.konten?'<p class="muted">'+(r.excerpt||r.konten)+'</p>':""}
-          ${r.date||r.tanggal?'<div class="muted">'+(r.date||r.tanggal)+'</div>':""}
-          ${r.href?'<a class="btn" href="'+r.href+'" target="_blank">Baca</a>':""}`;
+        c.innerHTML=`<h3>${pick(r,["judul","title","nama"])||"Info"}</h3>
+          ${pick(r,["excerpt","ringkasan","konten","deskripsi"]) ? '<p class="muted">'+pick(r,["excerpt","ringkasan","konten","deskripsi"])+'</p>':""}
+          ${pick(r,["date","tanggal","tgl"]) ? '<div class="muted">'+pick(r,["date","tanggal","tgl"])+'</div>':""}
+          ${pick(r,["href","link","url"]) ? '<a class="btn" href="'+pick(r,["href","link","url"])+'" target="_blank">Baca</a>':""}`;
         wrap.appendChild(c);
       });
     }
