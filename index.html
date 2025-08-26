@@ -1,192 +1,164 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jepang Mengaji — Beranda</title>
-  <link rel="icon" href="jm.jpeg"/>
+  <link rel="icon" href="jm.jpeg" />
   <style>
     :root{
-      --bg:#fff; --bg-soft:#f9fafb; --text:#111827;
-      --muted:#6b7280; --border:#e5e7eb;
-      --primary:#ef4444; --shadow:0 4px 20px rgba(0,0,0,.08);
+      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
+      --card:#fff;--border:#e5e7eb;--primary:#ef4444;
+      --shadow:0 6px 24px rgba(2,6,23,.08)
     }
-    body{margin:0;font-family:system-ui,Arial;background:var(--bg);color:var(--text)}
-    body::before{
-      content:""; position:fixed; inset:0; z-index:-1;
-      background:linear-gradient(rgba(255,255,255,.94),rgba(255,255,255,.94)),
-        url("jm.jpeg") center/40% no-repeat;
-      opacity:.12;
-    }
-    a{text-decoration:none;color:inherit}
-    .container{max-width:1100px;margin:0 auto;padding:0 1rem}
-
-    /* NAV */
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{font-family:Inter,ui-sans-serif,system-ui,Arial;background:var(--bg);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1180px;margin:0 auto;padding:0 16px}
+    /* NAVBAR */
     .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0}
-    .brand{display:flex;align-items:center;gap:.5rem;font-weight:700}
-    .brand img{width:32px;height:32px;border-radius:50%}
-    .menu-toggle{display:block;cursor:pointer;font-size:22px;margin-right:.5rem}
-    .nav-links{display:flex;gap:.5rem;align-items:center}
-    .nav-links a{padding:.35rem .7rem;border:1px solid var(--border);border-radius:999px;white-space:nowrap}
-    .nav-links a.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
-    @media(max-width:768px){
-      .nav-links{display:none;flex-direction:column;align-items:flex-start;padding:1rem}
-      .nav-links.show{display:flex;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--border)}
-    }
-
-    section{padding:2rem 0}
-    h2{margin:0 0 1rem}
-    .grid{display:grid;gap:1rem}
-    .grid-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-    .card{border:1px solid var(--border);border-radius:.75rem;padding:1rem;background:#fff;box-shadow:var(--shadow)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+    .brand img{width:36px;height:36px;border-radius:8px;border:1px solid var(--border)}
+    .nav-links{display:flex;gap:8px;align-items:center;overflow:auto}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    /* LAYOUT + SIDEBAR */
+    .layout{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:1024px){ .layout{grid-template-columns:260px 1fr} }
+    .sidebar{display:none}
+    @media(min-width:1024px){ .sidebar{display:block;position:sticky;top:64px;height:calc(100vh - 80px)} }
+    .sidecard{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
+    .sidecard h3{margin:4px 0 8px;font-size:15px}
+    .sidecard a{display:block;padding:8px;border-radius:8px}
+    .sidecard a:hover{background:var(--bg-soft)}
+    /* SECTIONS */
+    .section{padding:18px 0}
+    .section h2{margin:0 0 10px}
+    .cards{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
+    .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
     .muted{color:var(--muted)}
-    .btn{display:inline-block;margin-top:.5rem;padding:.4rem .8rem;border:1px solid var(--border);border-radius:.5rem}
-    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
-
-    /* Carousel */
-    .carousel{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-    .frame{width:100%;aspect-ratio:16/9;overflow:hidden}
-    .track{display:flex;height:100%;transition:transform .5s ease}
-    .slide{min-width:100%;height:100%}
-    .slide img{width:100%;height:100%;object-fit:cover}
-    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
-    .ctrl button{pointer-events:auto;background:rgba(0,0,0,.5);color:#fff;border:none;width:40px;height:40px;border-radius:50%}
-    .dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px}
-    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5)}
-    .dot.active{background:#fff}
-
-    footer{border-top:1px solid var(--border);padding:1rem 0;text-align:center;font-size:.9rem;color:var(--muted)}
+    .badge{display:inline-block;font-size:12px;border:1px solid var(--border);border-radius:999px;padding:2px 8px;background:#fff}
+    footer{border-top:1px solid var(--border);padding:20px 0;color:var(--muted);text-align:center}
   </style>
 </head>
 <body>
-  <!-- NAV -->
+  <!-- NAVBAR -->
   <nav class="nav">
     <div class="container nav-inner">
-      <div style="display:flex;align-items:center;gap:.5rem">
-        <div class="menu-toggle" id="menuBtn">☰</div>
-        <div class="brand"><img src="jm.jpeg" alt="Logo"><span>Jepang Mengaji</span></div>
-      </div>
-      <div class="nav-links" id="navLinks">
-        <a href="#top">Home</a>
-        <a href="#info">Info Terbaru</a>
-        <a href="#urgent">Penting</a>
-        <a href="#artikel">Artikel</a>
-        <a href="#kajian">Kajian</a>
-        <a class="primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank">Arsip YouTube</a>
+      <div class="brand"><img src="jm.jpeg" alt="JM"><span>Jepang Mengaji</span></div>
+      <div class="nav-links">
+        <a class="btn" href="#updates">Info Terbaru</a>
+        <a class="btn" href="#urgent">Penting</a>
+        <a class="btn" href="#artikel">Artikel</a>
+        <a class="btn" href="#kajian">Kajian</a>
+        <a class="btn primary" href="https://www.youtube.com/@JepangMengaji" target="_blank">Arsip YouTube</a>
       </div>
     </div>
   </nav>
 
-  <main class="container" id="top">
-    <!-- Slideshow -->
-    <section id="slideshow">
-      <div class="carousel">
-        <div class="frame">
-          <div class="track" id="track">
-            <div class="slide"><img src="assets/slides/1.jpeg" alt="Slide 1"></div>
-            <div class="slide"><img src="assets/slides/2.jpeg" alt="Slide 2"></div>
-            <div class="slide"><img src="assets/slides/3.jpeg" alt="Slide 3"></div>
+  <div class="container layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidecard">
+        <h3>Navigasi</h3>
+        <a href="#updates">🆕 Info Terbaru</a>
+        <a href="#urgent">⚠️ Pengumuman Penting</a>
+        <a href="#artikel">📖 Artikel</a>
+        <a href="#kajian">📚 Kajian</a>
+        <a href="#donasi">❤️ Donasi</a>
+        <a href="https://www.youtube.com/@JepangMengaji" target="_blank">▶️ Arsip YouTube</a>
+        <hr>
+        <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO" target="_blank">📲 WhatsApp</a>
+        <a href="https://t.me/jepangmengaji_channel" target="_blank">📣 Telegram</a>
+        <a href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
+      </div>
+    </aside>
+
+    <main>
+      <!-- Info Terbaru -->
+      <section id="updates" class="section">
+        <h2>Info Terbaru</h2>
+        <div id="updatesList" class="cards"></div>
+      </section>
+      <!-- Penting -->
+      <section id="urgent" class="section">
+        <h2>Pengumuman Penting</h2>
+        <div id="urgentList" class="cards"></div>
+      </section>
+      <!-- Artikel -->
+      <section id="artikel" class="section">
+        <h2>Artikel</h2>
+        <div id="articlesList" class="cards"></div>
+      </section>
+      <!-- Kajian -->
+      <section id="kajian" class="section">
+        <h2>Kajian</h2>
+        <div id="kajianList" class="cards"></div>
+      </section>
+      <!-- Donasi -->
+      <section id="donasi" class="section">
+        <h2>Donasi</h2>
+        <div class="cards">
+          <div class="card">
+            <h3>❤️ Donasi Kegiatan</h3>
+            <p class="muted">SMBC/Jenius a.n. Wahyu Setiawan — <b>90220139952</b></p>
+            <p class="muted">Yucho Ginko a.n. トリサンボド — <b>14660-20688191</b></p>
           </div>
-          <div class="ctrl"><button id="prev">‹</button><button id="next">›</button></div>
-          <div class="dots" id="dots"></div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
+  </div>
 
-    <section id="info"><h2>Info Terbaru</h2><div id="infoList" class="grid grid-3"></div></section>
-    <section id="urgent"><h2>Pengumuman Penting</h2><div id="urgentList" class="grid grid-3"></div></section>
-    <section id="artikel"><h2>Artikel</h2><div id="articlesList" class="grid grid-3"></div></section>
-    <section id="kajian"><h2>Kajian</h2><div id="kajianList" class="grid grid-3"></div></section>
-
-    <section id="donasi">
-      <h2>Donasi</h2>
-      <div class="grid grid-3">
-        <div class="card">
-          <h3>❤️ Donasi Kegiatan</h3>
-          <p class="muted">Dukung dakwah: operasional, dokumentasi, kajian.</p>
-          <ul class="muted">
-            <li>SMBC/Jenius a.n. Wahyu Setiawan — <b>90220139952</b></li>
-            <li>Yucho Ginko a.n. トリサンボド — <b>14660-20688191</b></li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>✅ Konfirmasi Transfer</h3>
-          <input id="nama" placeholder="Nama" style="width:100%;margin:.3rem 0;padding:.4rem"/>
-          <input id="nominal" placeholder="Nominal" style="width:100%;margin:.3rem 0;padding:.4rem"/>
-          <input id="tgl" type="date" style="width:100%;margin:.3rem 0;padding:.4rem"/>
-          <select id="bank" style="width:100%;margin:.3rem 0;padding:.4rem"><option>SMBC/Jenius</option><option>Yucho</option></select>
-          <button id="btnWA" style="margin-top:.5rem;padding:.5rem 1rem;background:var(--primary);color:#fff;border:none;border-radius:.5rem">Kirim via WhatsApp</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>© 2025 Jepang Mengaji • Design by Wahyu</footer>
+  <footer>© <span id="year"></span> Jepang Mengaji • Design by Wahyu</footer>
 
   <script>
-    // burger
-    document.getElementById('menuBtn').onclick=()=>document.getElementById('navLinks').classList.toggle('show');
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // WA konfirmasi
-    document.getElementById('btnWA').onclick=()=>{
-      const nama=document.getElementById('nama').value;
-      const nominal=document.getElementById('nominal').value;
-      const tgl=document.getElementById('tgl').value;
-      const bank=document.getElementById('bank').value;
-      const msg=`Assalamu'alaikum, saya konfirmasi donasi.\nNama: ${nama}\nNominal: ${nominal}\nTanggal: ${tgl}\nBank: ${bank}`;
-      window.open(`https://wa.me/817084810427?text=${encodeURIComponent(msg)}`);
-    };
-
-    // carousel
-    const track=document.getElementById('track');
-    const slides=Array.from(track.children);
-    const prev=document.getElementById('prev');
-    const next=document.getElementById('next');
-    const dotsWrap=document.getElementById('dots');
-    let index=0,timer=null;
-    function buildDots(){dotsWrap.innerHTML='';slides.forEach((_,i)=>{const d=document.createElement('button');d.className='dot'+(i===index?' active':'');d.onclick=()=>go(i,true);dotsWrap.appendChild(d);});}
-    function go(i,user){index=(i+slides.length)%slides.length;track.style.transform=`translateX(${-index*100}%)`;Array.from(dotsWrap.children).forEach((el,di)=>el.classList.toggle('active',di===index));if(user) restart();}
-    function nextSlide(){go(index+1,false)};function prevSlide(){go(index-1,true)};function restart(){clearInterval(timer);timer=setInterval(nextSlide,5000);}
-    next.onclick=nextSlide;prev.onclick=prevSlide;buildDots();restart();
-
-    // CSV URL
+    // CSV URLs
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
     const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=450885199&single=true&output=csv";
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
     const PENTING="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
 
+    // CSV parser (quotes-aware)
     async function fetchCSV(url){
-      try{
-        const res=await fetch(url+"&_="+Date.now());
-        const text=await res.text();
-        const rows=[];let row=[],cell='',inQuotes=false;
-        for(let i=0;i<text.length;i++){
-          const c=text[i],n=text[i+1];
-          if(c=='"'){if(inQuotes&&n=='"'){cell+='"';i++;}else{inQuotes=!inQuotes;}}
-          else if(c===','&&!inQuotes){row.push(cell);cell='';}
-          else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){if(c==='\r')i++;row.push(cell);cell='';if(row.length)rows.push(row);row=[];}
-          else{cell+=c;}
-        }
-        if(cell||row.length){row.push(cell);rows.push(row)}
-        const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
-        return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
-      }catch(e){console.error(e);return [];}
+      const res=await fetch(url+"&_="+Date.now());
+      const text=(await res.text()).replace(/^\uFEFF/,'');
+      const rows=[];let row=[],cell='',inQuotes=false;
+      for(let i=0;i<text.length;i++){
+        const c=text[i],n=text[i+1];
+        if(c=='"'){ if(inQuotes&&n=='"'){cell+='"';i++;} else inQuotes=!inQuotes; }
+        else if(c===','&&!inQuotes){row.push(cell);cell='';}
+        else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){if(c==='\r')i++;row.push(cell);rows.push(row);row=[];cell='';}
+        else cell+=c;
+      }
+      if(cell||row.length){row.push(cell);rows.push(row);}
+      const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
+      return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
     }
+
+    const pick=(o,keys)=>{for(const k of keys){const v=o[k];if(v&&v.trim()) return v;}return "";};
+
     function render(list,id,fallback){
-      const wrap=document.getElementById(id);wrap.innerHTML="";
+      const wrap=document.getElementById(id); wrap.innerHTML="";
       if(!list.length){wrap.innerHTML='<div class="card muted">'+fallback+'</div>';return;}
-      list.forEach(r=>{
-        const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${r.judul||r.title||"Info"}</h3>
-          ${r.excerpt||r.konten?'<p class="muted">'+(r.excerpt||r.konten)+'</p>':""}
-          ${r.date||r.tanggal||r.waktu?'<div class="muted">'+(r.date||r.tanggal||r.waktu)+'</div>':""}
-          ${r.href||r.link?'<a class="btn" href="'+(r.href||r.link)+'" target="_blank">Baca</a>':""}`;
-        wrap.appendChild(c);
+      list.forEach(it=>{
+        const el=document.createElement("article"); el.className="card";
+        el.innerHTML=`
+          <h3>${pick(it,["title","judul","nama"])}</h3>
+          ${pick(it,["excerpt","konten","deskripsi"]) ? `<p class="muted">${pick(it,["excerpt","konten","deskripsi"])}</p>` : ""}
+          ${pick(it,["date","tanggal","tgl"]) ? `<div class="muted">${pick(it,["date","tanggal","tgl"])}</div>` : ""}
+          ${pick(it,["href","link","url"]) ? `<a class="btn" href="${pick(it,["href","link","url"])}" target="_blank">Baca</a>` : ""}
+        `;
+        wrap.appendChild(el);
       });
     }
+
     (async()=>{
-      render(await fetchCSV(INFO),"infoList","Belum ada info.");
+      render(await fetchCSV(INFO),"updatesList","Belum ada info.");
       render(await fetchCSV(PENTING),"urgentList","Belum ada pengumuman.");
       render(await fetchCSV(ARTICLES),"articlesList","Belum ada artikel.");
       render(await fetchCSV(KAJIAN),"kajianList","Belum ada kajian.");
