@@ -57,8 +57,7 @@
     .dot.active{background:#fff}
 
     footer{border-top:1px solid var(--border);padding:1rem 0;text-align:center;font-size:.9rem;color:var(--muted)}
-    .foot-links{display:flex;gap:1rem;justify-content:center;margin-top:.5rem;flex-wrap:wrap}
-    .btn{display:inline-block;padding:.3rem .7rem;border:1px solid var(--border);border-radius:.5rem;background:#fff}
+    .social a{margin:0 .5rem}
   </style>
 </head>
 <body>
@@ -80,7 +79,7 @@
     </div>
   </nav>
 
-  <main class="container">
+  <main class="container" id="top">
     <!-- Slideshow -->
     <section id="slideshow">
       <div class="carousel">
@@ -126,8 +125,8 @@
 
   <footer>
     © 2025 Jepang Mengaji • Design by Wahyu
-    <div class="foot-links">
-      <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO?mode=ac_t" target="_blank">📲 WhatsApp</a>
+    <div class="social">
+      <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO" target="_blank">📲 WhatsApp</a>
       <a href="https://t.me/jepangmengaji_channel" target="_blank">📣 Telegram</a>
       <a href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
       <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank">▶️ YouTube</a>
@@ -170,46 +169,74 @@
       try{
         const res=await fetch(url+"&_="+Date.now());
         const text=await res.text();
-        const [head,...rows]=text.split(/\r?\n/).map(r=>r.split(","));
-        const headers=head.map(h=>h.trim().toLowerCase());
-        return rows.filter(r=>r.some(c=>c.trim()!=="")).map(r=>{
-          let o={};headers.forEach((h,i)=>o[h]=r[i]);return o;
-        });
+        const rows=[];let row=[],cell="",inQuotes=false;
+        for(let i=0;i<text.length;i++){
+          const c=text[i],n=text[i+1];
+          if(c=='"'){if(inQuotes&&n=='"'){cell+='"';i++;}else inQuotes=!inQuotes;}
+          else if(c===','&&!inQuotes){row.push(cell);cell='';}
+          else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){if(c==='\r')i++;row.push(cell);cell='';if(row.length)rows.push(row);row=[];}
+          else cell+=c;
+        }
+        if(cell||row.length){row.push(cell);rows.push(row);}
+        const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
+        return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
       }catch(e){console.error(e);return [];}
     }
-    const pick=(o,keys)=>{for(const k of keys){if(o[k]&&o[k].trim()) return o[k].trim();}return "";}
+    const pick=(o,keys)=>{for(const k of keys){if(o[k])return o[k];}return""};
 
-    function render(list,id,type){
-      const wrap=document.getElementById(id);wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada '+type+'.</div>';return;}
+    function renderArticles(list){
+      const wrap=document.getElementById("articlesList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada artikel.</div>';return;}
       list.forEach(r=>{
         const c=document.createElement("div");c.className="card";
-        if(type==="artikel"){
-          c.innerHTML=`<h3>${pick(r,["title","judul","nama"])}</h3>
-            ${pick(r,["excerpt","ringkasan","konten","deskripsi"])?'<p class="muted">'+pick(r,["excerpt","ringkasan","konten","deskripsi"])+'</p>':""}
-            ${pick(r,["date","tanggal","tgl"]) ? '<div class="muted">'+pick(r,["date","tanggal","tgl"])+'</div>':""}
-            ${pick(r,["href","link","url"]) ? '<a class="btn" href="'+pick(r,["href","link","url"])+'" target="_blank">Baca</a>':""}`;
-        }else if(type==="kajian"){
-          c.innerHTML=`<h3>${pick(r,["judul","title"])}</h3>
-            <div class="muted">👤 ${pick(r,["ustadz","pemateri"])}</div>
-            <div class="muted">🗓️ ${pick(r,["waktu","tanggal","date"])}</div>
-            <div class="muted">📍 ${pick(r,["lokasi","tempat"])}</div>
-            ${pick(r,["link","mapurl","href"]) ? '<a class="btn" href="'+pick(r,["link","mapurl","href"])+'" target="_blank">Detail</a>':""}`;
-        }else{
-          c.innerHTML=`<h3>${pick(r,["judul","title"])}</h3>
-            ${pick(r,["konten","deskripsi"])?'<p class="muted">'+pick(r,["konten","deskripsi"])+'</p>':""}
-            ${pick(r,["tanggal","date","tgl"]) ? '<div class="muted">'+pick(r,["tanggal","date","tgl"])+'</div>':""}
-            ${pick(r,["href","link"]) ? '<a class="btn" href="'+pick(r,["href","link"])+'" target="_blank">Baca</a>':""}`;
-        }
+        c.innerHTML=`<h3>${pick(r,["title","judul","nama"])}</h3>
+        ${pick(r,["excerpt","ringkasan","konten","deskripsi"])?'<p class="muted">'+pick(r,["excerpt","ringkasan","konten","deskripsi"])+'</p>':""}
+        ${pick(r,["date","tanggal","tgl"])?'<div class="muted">'+pick(r,["date","tanggal","tgl"])+'</div>':""}
+        ${pick(r,["href","link","url"])?'<a class="btn" href="'+pick(r,["href","link","url"])+'" target="_blank">Baca</a>':""}`;
+        wrap.appendChild(c);
+      });
+    }
+    function renderInfo(list){
+      const wrap=document.getElementById("infoList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada info.</div>';return;}
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${pick(r,["judul","title","nama"])}</h3>
+        ${pick(r,["konten","excerpt","deskripsi"])?'<p class="muted">'+pick(r,["konten","excerpt","deskripsi"])+'</p>':""}
+        ${pick(r,["tanggal","date"])?'<div class="muted">'+pick(r,["tanggal","date"])+'</div>':""}`;
+        wrap.appendChild(c);
+      });
+    }
+    function renderUrgent(list){
+      const wrap=document.getElementById("urgentList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada pengumuman.</div>';return;}
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${pick(r,["judul","title"])}</h3>
+        ${pick(r,["konten","desc"])?'<p class="muted">'+pick(r,["konten","desc"])+'</p>':""}
+        ${pick(r,["tanggal","date"])?'<div class="muted">'+pick(r,["tanggal","date"])+'</div>':""}`;
+        wrap.appendChild(c);
+      });
+    }
+    function renderKajian(list){
+      const wrap=document.getElementById("kajianList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada kajian.</div>';return;}
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${pick(r,["judul","title","tema"])}</h3>
+        ${pick(r,["ustadz","pemateri"])?'<div class="muted">👤 '+pick(r,["ustadz","pemateri"])+'</div>':""}
+        ${pick(r,["waktu","tanggal","date"])?'<div class="muted">🗓️ '+pick(r,["waktu","tanggal","date"])+'</div>':""}
+        ${pick(r,["lokasi","tempat"])?'<div class="muted">📍 '+pick(r,["lokasi","tempat"])+'</div>':""}
+        ${pick(r,["link","mapurl","href"])?'<a class="btn" href="'+pick(r,["link","mapurl","href"])+'" target="_blank">Lihat Detail</a>':""}`;
         wrap.appendChild(c);
       });
     }
 
     (async()=>{
-      render(await fetchCSV(INFO),"infoList","info");
-      render(await fetchCSV(PENTING),"urgentList","pengumuman");
-      render(await fetchCSV(ARTICLES),"articlesList","artikel");
-      render(await fetchCSV(KAJIAN),"kajianList","kajian");
+      renderArticles(await fetchCSV(ARTICLES));
+      renderInfo(await fetchCSV(INFO));
+      renderUrgent(await fetchCSV(PENTING));
+      renderKajian(await fetchCSV(KAJIAN));
     })();
   </script>
 </body>
