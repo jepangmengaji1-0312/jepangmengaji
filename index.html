@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jepang Mengaji — Beranda</title>
+  <title>Jepang Mengaji</title>
   <link rel="icon" href="jm.jpeg">
   <style>
     :root{
@@ -15,19 +15,17 @@
     body{font-family:Inter,ui-sans-serif,system-ui;background:var(--bg);color:var(--text)}
     a{text-decoration:none;color:inherit}
     .container{max-width:1100px;margin:0 auto;padding:0 16px}
-    /* background watermark logo */
     body::before{
       content:"";position:fixed;inset:0;z-index:-1;
-      background:linear-gradient(rgba(255,255,255,.94),rgba(255,255,255,.94)),
-                 url("jm.jpeg") center/40% no-repeat;
-      opacity:.12;
+      background:linear-gradient(rgba(255,255,255,.96),rgba(255,255,255,.96)),
+                 url("jm.jpeg") center/35% no-repeat;
+      opacity:.15;
     }
-    /* Navbar */
     .nav{position:sticky;top:0;background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);z-index:50}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
     .brand{display:flex;align-items:center;gap:8px;font-weight:700}
-    .brand img{width:34px;height:34px;border-radius:50%}
-    .menu-btn{display:flex;flex-direction:column;gap:4px;cursor:pointer;margin-left:8px}
+    .brand img{width:32px;height:32px;border-radius:50%}
+    .menu-btn{display:flex;flex-direction:column;gap:4px;cursor:pointer;margin-right:8px}
     .menu-btn span{width:24px;height:3px;background:var(--text)}
     ul.nav-links{display:flex;gap:8px;list-style:none}
     .btn{padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:#fff}
@@ -36,14 +34,12 @@
       ul.nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:#fff;padding:10px;border-bottom:1px solid var(--border)}
       ul.nav-links.open{display:flex}
     }
-    /* Sections */
     section{padding:32px 0}
     h2{margin-bottom:12px;font-size:1.25rem}
     .cards{display:grid;gap:12px}
     @media(min-width:768px){.cards{grid-template-columns:repeat(3,1fr)}}
     .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
     .muted{color:var(--muted);font-size:.9rem}
-    /* Donasi */
     .grid-2{display:grid;gap:16px}
     @media(min-width:768px){.grid-2{grid-template-columns:1fr 1fr}}
     footer{border-top:1px solid var(--border);padding:16px;margin-top:40px;color:var(--muted);text-align:center}
@@ -76,14 +72,17 @@
         <div class="card">
           <h3>❤️ Donasi Kegiatan</h3>
           <p class="muted">Dukung dakwah: operasional, dokumentasi, dan kajian.</p>
-          <ul class="muted"><li>SMBC/Jenius a.n. Wahyu Setiawan — <strong>90220139952</strong></li><li>Yucho Ginko a.n. トリサンボド — <strong>14660-20688191</strong></li></ul>
+          <ul class="muted">
+            <li>SMBC/Jenius a.n. Wahyu Setiawan — <strong>90220139952</strong></li>
+            <li>Yucho Ginko a.n. トリサンボド — <strong>14660-20688191</strong></li>
+          </ul>
         </div>
         <div class="card">
           <h3>✅ Konfirmasi Transfer</h3>
-          <input class="btn" id="nama" placeholder="Nama"><br>
-          <input class="btn" id="nominal" placeholder="Nominal"><br>
-          <input class="btn" id="tgl" type="date"><br>
-          <select class="btn" id="bank"><option>SMBC/Jenius</option><option>Yucho</option></select><br>
+          <input class="btn" id="nama" placeholder="Nama"><br><br>
+          <input class="btn" id="nominal" placeholder="Nominal"><br><br>
+          <input class="btn" id="tgl" type="date"><br><br>
+          <select class="btn" id="bank"><option>SMBC/Jenius</option><option>Yucho</option></select><br><br>
           <button class="btn primary" id="btnWA">Kirim via WhatsApp</button>
         </div>
       </div>
@@ -94,16 +93,19 @@
 
   <script>
     document.getElementById('year').textContent=new Date().getFullYear();
-    // burger toggle
     const menuBtn=document.getElementById('menuBtn');
     const navLinks=document.getElementById('navLinks');
     menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
 
     // Konfirmasi WA
+    const nama=document.getElementById('nama');
+    const nominal=document.getElementById('nominal');
+    const tgl=document.getElementById('tgl');
+    const bank=document.getElementById('bank');
     document.getElementById('btnWA').onclick=()=>{
       const msg=`Assalamu'alaikum, saya konfirmasi donasi.\nNama: ${nama.value}\nNominal: ${nominal.value}\nTanggal: ${tgl.value}\nBank: ${bank.value}`;
       window.open(`https://wa.me/817084810427?text=${encodeURIComponent(msg)}`);
-    }
+    };
 
     // Fetch CSV
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
@@ -112,10 +114,10 @@
 
     async function fetchCSV(url){
       const res=await fetch(url);const txt=await res.text();
-      const rows=txt.split(/\\r?\\n/).map(r=>r.split(','));
+      const rows=txt.split(/\r?\n/).map(r=>r.split(','));
       const head=rows.shift().map(h=>h.trim().toLowerCase());
-      return rows.filter(r=>r.length>1).map(r=>{
-        const obj={};head.forEach((h,i)=>obj[h]=r[i]);return obj;
+      return rows.filter(r=>r.join('').trim()!=="").map(r=>{
+        const obj={};head.forEach((h,i)=>obj[h]=r[i]||"");return obj;
       });
     }
     function render(list,id){
@@ -124,8 +126,8 @@
       list.forEach(x=>{
         const c=document.createElement('div');c.className='card';
         c.innerHTML=`<h3>${x.judul||x.title||'Info'}</h3>
-                     <p class='muted'>${x.konten||x.content||x.desc||''}</p>
-                     <div class='muted'>${x.tanggal||x.date||''}</div>`;
+                     ${x.konten||x.content||x.deskripsi?'<p class="muted">'+(x.konten||x.content||x.deskripsi)+'</p>':""}
+                     <div class='muted'>${x.tanggal||x.date||x.waktu||""}</div>`;
         el.appendChild(c);
       });
     }
