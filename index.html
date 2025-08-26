@@ -16,7 +16,7 @@
       content:""; position:fixed; inset:0; z-index:-1;
       background:linear-gradient(rgba(255,255,255,.94),rgba(255,255,255,.94)),
         url("jm.jpeg") center/40% no-repeat;
-      opacity:.15;
+      opacity:.12;
     }
     a{text-decoration:none;color:inherit}
     .container{max-width:1100px;margin:0 auto;padding:0 1rem}
@@ -26,23 +26,23 @@
     .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0}
     .brand{display:flex;align-items:center;gap:.5rem;font-weight:700}
     .brand img{width:32px;height:32px;border-radius:50%}
-    .menu-toggle{display:none;cursor:pointer;font-size:22px;margin-right:.5rem}
+    .menu-toggle{display:block;cursor:pointer;font-size:22px;margin-right:.5rem}
     .nav-links{display:flex;gap:.5rem;align-items:center}
     .nav-links a{padding:.35rem .7rem;border:1px solid var(--border);border-radius:999px;white-space:nowrap}
     .nav-links a.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
     @media(max-width:768px){
-      .menu-toggle{display:block}
       .nav-links{display:none;flex-direction:column;align-items:flex-start;padding:1rem}
       .nav-links.show{display:flex;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--border)}
     }
 
-    /* Sections */
     section{padding:2rem 0}
     h2{margin:0 0 1rem}
     .grid{display:grid;gap:1rem}
     .grid-3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
     .card{border:1px solid var(--border);border-radius:.75rem;padding:1rem;background:#fff;box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
+    .btn{display:inline-block;margin-top:.5rem;padding:.4rem .8rem;border:1px solid var(--border);border-radius:.5rem}
+    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
 
     /* Carousel */
     .carousel{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden}
@@ -57,7 +57,6 @@
     .dot.active{background:#fff}
 
     footer{border-top:1px solid var(--border);padding:1rem 0;text-align:center;font-size:.9rem;color:var(--muted)}
-    .social a{margin:0 .5rem}
   </style>
 </head>
 <body>
@@ -123,15 +122,7 @@
     </section>
   </main>
 
-  <footer>
-    © 2025 Jepang Mengaji • Design by Wahyu
-    <div class="social">
-      <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO" target="_blank">📲 WhatsApp</a>
-      <a href="https://t.me/jepangmengaji_channel" target="_blank">📣 Telegram</a>
-      <a href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
-      <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank">▶️ YouTube</a>
-    </div>
-  </footer>
+  <footer>© 2025 Jepang Mengaji • Design by Wahyu</footer>
 
   <script>
     // burger
@@ -169,74 +160,36 @@
       try{
         const res=await fetch(url+"&_="+Date.now());
         const text=await res.text();
-        const rows=[];let row=[],cell="",inQuotes=false;
+        const rows=[];let row=[],cell='',inQuotes=false;
         for(let i=0;i<text.length;i++){
           const c=text[i],n=text[i+1];
-          if(c=='"'){if(inQuotes&&n=='"'){cell+='"';i++;}else inQuotes=!inQuotes;}
+          if(c=='"'){if(inQuotes&&n=='"'){cell+='"';i++;}else{inQuotes=!inQuotes;}}
           else if(c===','&&!inQuotes){row.push(cell);cell='';}
           else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){if(c==='\r')i++;row.push(cell);cell='';if(row.length)rows.push(row);row=[];}
-          else cell+=c;
+          else{cell+=c;}
         }
-        if(cell||row.length){row.push(cell);rows.push(row);}
+        if(cell||row.length){row.push(cell);rows.push(row)}
         const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
         return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
       }catch(e){console.error(e);return [];}
     }
-    const pick=(o,keys)=>{for(const k of keys){if(o[k])return o[k];}return""};
-
-    function renderArticles(list){
-      const wrap=document.getElementById("articlesList");wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada artikel.</div>';return;}
+    function render(list,id,fallback){
+      const wrap=document.getElementById(id);wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">'+fallback+'</div>';return;}
       list.forEach(r=>{
         const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${pick(r,["title","judul","nama"])}</h3>
-        ${pick(r,["excerpt","ringkasan","konten","deskripsi"])?'<p class="muted">'+pick(r,["excerpt","ringkasan","konten","deskripsi"])+'</p>':""}
-        ${pick(r,["date","tanggal","tgl"])?'<div class="muted">'+pick(r,["date","tanggal","tgl"])+'</div>':""}
-        ${pick(r,["href","link","url"])?'<a class="btn" href="'+pick(r,["href","link","url"])+'" target="_blank">Baca</a>':""}`;
+        c.innerHTML=`<h3>${r.judul||r.title||"Info"}</h3>
+          ${r.excerpt||r.konten?'<p class="muted">'+(r.excerpt||r.konten)+'</p>':""}
+          ${r.date||r.tanggal||r.waktu?'<div class="muted">'+(r.date||r.tanggal||r.waktu)+'</div>':""}
+          ${r.href||r.link?'<a class="btn" href="'+(r.href||r.link)+'" target="_blank">Baca</a>':""}`;
         wrap.appendChild(c);
       });
     }
-    function renderInfo(list){
-      const wrap=document.getElementById("infoList");wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada info.</div>';return;}
-      list.forEach(r=>{
-        const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${pick(r,["judul","title","nama"])}</h3>
-        ${pick(r,["konten","excerpt","deskripsi"])?'<p class="muted">'+pick(r,["konten","excerpt","deskripsi"])+'</p>':""}
-        ${pick(r,["tanggal","date"])?'<div class="muted">'+pick(r,["tanggal","date"])+'</div>':""}`;
-        wrap.appendChild(c);
-      });
-    }
-    function renderUrgent(list){
-      const wrap=document.getElementById("urgentList");wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada pengumuman.</div>';return;}
-      list.forEach(r=>{
-        const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${pick(r,["judul","title"])}</h3>
-        ${pick(r,["konten","desc"])?'<p class="muted">'+pick(r,["konten","desc"])+'</p>':""}
-        ${pick(r,["tanggal","date"])?'<div class="muted">'+pick(r,["tanggal","date"])+'</div>':""}`;
-        wrap.appendChild(c);
-      });
-    }
-    function renderKajian(list){
-      const wrap=document.getElementById("kajianList");wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada kajian.</div>';return;}
-      list.forEach(r=>{
-        const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${pick(r,["judul","title","tema"])}</h3>
-        ${pick(r,["ustadz","pemateri"])?'<div class="muted">👤 '+pick(r,["ustadz","pemateri"])+'</div>':""}
-        ${pick(r,["waktu","tanggal","date"])?'<div class="muted">🗓️ '+pick(r,["waktu","tanggal","date"])+'</div>':""}
-        ${pick(r,["lokasi","tempat"])?'<div class="muted">📍 '+pick(r,["lokasi","tempat"])+'</div>':""}
-        ${pick(r,["link","mapurl","href"])?'<a class="btn" href="'+pick(r,["link","mapurl","href"])+'" target="_blank">Lihat Detail</a>':""}`;
-        wrap.appendChild(c);
-      });
-    }
-
     (async()=>{
-      renderArticles(await fetchCSV(ARTICLES));
-      renderInfo(await fetchCSV(INFO));
-      renderUrgent(await fetchCSV(PENTING));
-      renderKajian(await fetchCSV(KAJIAN));
+      render(await fetchCSV(INFO),"infoList","Belum ada info.");
+      render(await fetchCSV(PENTING),"urgentList","Belum ada pengumuman.");
+      render(await fetchCSV(ARTICLES),"articlesList","Belum ada artikel.");
+      render(await fetchCSV(KAJIAN),"kajianList","Belum ada kajian.");
     })();
   </script>
 </body>
