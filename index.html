@@ -161,52 +161,80 @@
     function nextSlide(){go(index+1,false)};function prevSlide(){go(index-1,true)};function restart(){clearInterval(timer);timer=setInterval(nextSlide,5000);}
     next.onclick=nextSlide;prev.onclick=prevSlide;buildDots();restart();
 
-    // CSV URL (isi dengan URL publish CSV masing-masing tab)
+    // CSV URL
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv";
     const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=450885199&single=true&output=csv";
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=1656910010&single=true&output=csv";
     const PENTING="https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=215662022&single=true&output=csv";
 
-    // Parser CSV
     async function fetchCSV(url){
       try{
         const res=await fetch(url+"&_="+Date.now());
         const text=await res.text();
-        const rows=[];let row=[],cell='',inQuotes=false;
-        for(let i=0;i<text.length;i++){
-          const c=text[i],n=text[i+1];
-          if(c=='"'){ if(inQuotes&&n=='"'){cell+='"';i++;} else inQuotes=!inQuotes; }
-          else if(c===','&&!inQuotes){ row.push(cell);cell=''; }
-          else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){ if(c==='\r') i++; row.push(cell);cell=''; rows.push(row);row=[]; }
-          else{ cell+=c; }
-        }
-        if(cell||row.length){row.push(cell);rows.push(row)}
+        const rows=text.split(/\r?\n/).map(r=>r.split(","));
         const headers=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
         return rows.filter(r=>r.some(c=>c.trim()!==""))
                    .map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()])));
       }catch(e){console.error(e);return [];}
     }
-    function pick(obj,keys){
-      for(const k of keys){ if(obj[k] && obj[k].trim()) return obj[k].trim(); }
-      return "";
-    }
-    function render(list,id){
-      const wrap=document.getElementById(id);wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada data / gagal memuat.</div>';return;}
+
+    function renderArticles(list){
+      const wrap=document.getElementById("articlesList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada artikel.</div>';return;}
       list.forEach(r=>{
         const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${pick(r,["judul","title","nama"])||"Info"}</h3>
-          ${pick(r,["excerpt","ringkasan","konten","deskripsi"]) ? '<p class="muted">'+pick(r,["excerpt","ringkasan","konten","deskripsi"])+'</p>':""}
-          ${pick(r,["date","tanggal","tgl"]) ? '<div class="muted">'+pick(r,["date","tanggal","tgl"])+'</div>':""}
-          ${pick(r,["href","link","url"]) ? '<a class="btn" href="'+pick(r,["href","link","url"])+'" target="_blank">Baca</a>':""}`;
+        c.innerHTML=`<h3>${r.title||"Artikel"}</h3>
+          ${r.excerpt?'<p class="muted">'+r.excerpt+'</p>':""}
+          ${r.date?'<div class="muted">'+r.date+'</div>':""}
+          ${r.href?'<a class="btn" href="'+r.href+'" target="_blank">Baca</a>':""}`;
         wrap.appendChild(c);
       });
     }
+
+    function renderInfo(list){
+      const wrap=document.getElementById("infoList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada info.</div>';return;}
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${r.judul||"Info"}</h3>
+          ${r.konten?'<p class="muted">'+r.konten+'</p>':""}
+          ${r.tanggal?'<div class="muted">'+r.tanggal+'</div>':""}
+          ${r.href?'<a class="btn" href="'+r.href+'" target="_blank">Baca</a>':""}`;
+        wrap.appendChild(c);
+      });
+    }
+
+    function renderPenting(list){
+      const wrap=document.getElementById("urgentList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada pengumuman.</div>';return;}
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${r.judul||"Pengumuman"}</h3>
+          ${r.konten?'<p class="muted">'+r.konten+'</p>':""}
+          ${r.tanggal?'<div class="muted">'+r.tanggal+'</div>':""}`;
+        wrap.appendChild(c);
+      });
+    }
+
+    function renderKajian(list){
+      const wrap=document.getElementById("kajianList");wrap.innerHTML="";
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada kajian.</div>';return;}
+      list.forEach(r=>{
+        const c=document.createElement("div");c.className="card";
+        c.innerHTML=`<h3>${r.judul||"Kajian"}</h3>
+          ${r.ustadz?'<div class="muted">👤 '+r.ustadz+'</div>':""}
+          ${r.waktu?'<div class="muted">🗓️ '+r.waktu+'</div>':""}
+          ${r.lokasi?'<div class="muted">📍 '+r.lokasi+'</div>':""}
+          ${r.link?'<a class="btn" href="'+r.link+'" target="_blank">Lihat</a>':""}`;
+        wrap.appendChild(c);
+      });
+    }
+
     (async()=>{
-      render(await fetchCSV(INFO),"infoList");
-      render(await fetchCSV(PENTING),"urgentList");
-      render(await fetchCSV(ARTICLES),"articlesList");
-      render(await fetchCSV(KAJIAN),"kajianList");
+      renderInfo(await fetchCSV(INFO));
+      renderPenting(await fetchCSV(PENTING));
+      renderArticles(await fetchCSV(ARTICLES));
+      renderKajian(await fetchCSV(KAJIAN));
     })();
   </script>
 </body>
