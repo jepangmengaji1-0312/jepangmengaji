@@ -44,9 +44,21 @@
     .card{border:1px solid var(--border);border-radius:.75rem;padding:1rem;background:#fff;box-shadow:var(--shadow)}
     .muted{color:var(--muted)}
 
+    /* Carousel */
+    .carousel{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .frame{width:100%;aspect-ratio:16/9;overflow:hidden}
+    .track{display:flex;height:100%;transition:transform .5s ease}
+    .slide{min-width:100%;height:100%}
+    .slide img{width:100%;height:100%;object-fit:cover}
+    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+    .ctrl button{pointer-events:auto;background:rgba(0,0,0,.5);color:#fff;border:none;width:40px;height:40px;border-radius:50%}
+    .dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5)}
+    .dot.active{background:#fff}
+
     footer{border-top:1px solid var(--border);padding:1rem 0;text-align:center;font-size:.9rem;color:var(--muted)}
-    .social{display:flex;gap:.5rem;justify-content:center;margin-top:.5rem;flex-wrap:wrap}
-    .btn-social{padding:.4rem .8rem;border:1px solid var(--border);border-radius:.5rem;font-size:.9rem;background:#fff}
+    .foot-links{display:flex;gap:1rem;justify-content:center;margin-top:.5rem;flex-wrap:wrap}
+    .btn{display:inline-block;padding:.3rem .7rem;border:1px solid var(--border);border-radius:.5rem;background:#fff}
   </style>
 </head>
 <body>
@@ -68,7 +80,22 @@
     </div>
   </nav>
 
-  <main class="container" id="top">
+  <main class="container">
+    <!-- Slideshow -->
+    <section id="slideshow">
+      <div class="carousel">
+        <div class="frame">
+          <div class="track" id="track">
+            <div class="slide"><img src="assets/slides/1.jpeg" alt="Slide 1"></div>
+            <div class="slide"><img src="assets/slides/2.jpeg" alt="Slide 2"></div>
+            <div class="slide"><img src="assets/slides/3.jpeg" alt="Slide 3"></div>
+          </div>
+          <div class="ctrl"><button id="prev">‹</button><button id="next">›</button></div>
+          <div class="dots" id="dots"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="info"><h2>Info Terbaru</h2><div id="infoList" class="grid grid-3"></div></section>
     <section id="urgent"><h2>Pengumuman Penting</h2><div id="urgentList" class="grid grid-3"></div></section>
     <section id="artikel"><h2>Artikel</h2><div id="articlesList" class="grid grid-3"></div></section>
@@ -99,12 +126,11 @@
 
   <footer>
     © 2025 Jepang Mengaji • Design by Wahyu
-    <div class="social">
-      <a class="btn-social" href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO" target="_blank">📲 WhatsApp Group</a>
-      <a class="btn-social" href="https://t.me/jepangmengaji_channel" target="_blank">📣 Telegram</a>
-      <a class="btn-social" href="https://www.youtube.com/@jepangmengaji1390" target="_blank">▶️ YouTube</a>
-      <a class="btn-social" href="https://www.instagram.com/jepangmengaji" target="_blank">📷 Instagram</a>
-      <a class="btn-social" href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
+    <div class="foot-links">
+      <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO?mode=ac_t" target="_blank">📲 WhatsApp</a>
+      <a href="https://t.me/jepangmengaji_channel" target="_blank">📣 Telegram</a>
+      <a href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
+      <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank">▶️ YouTube</a>
     </div>
   </footer>
 
@@ -122,51 +148,68 @@
       window.open(`https://wa.me/817084810427?text=${encodeURIComponent(msg)}`);
     };
 
-    // ==== CSV PARSER aman (quotes aware)
-    async function fetchCSV(url){
-      try{
-        const res=await fetch(url+"&_="+Date.now());
-        const text=await res.text();
-        const rows=[];let row=[],cell="",inQuotes=false;
-        for(let i=0;i<text.length;i++){
-          const c=text[i],n=text[i+1];
-          if(c=='"'){if(inQuotes&&n=='"'){cell+='"';i++;}else inQuotes=!inQuotes;}
-          else if(c===','&&!inQuotes){row.push(cell);cell="";}
-          else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){
-            if(c==='\r') i++;
-            row.push(cell);rows.push(row);row=[];cell="";
-          } else cell+=c;
-        }
-        if(cell||row.length){row.push(cell);rows.push(row);}
-        const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
-        return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||"").trim()])));
-      }catch(e){console.error(e);return [];}
-    }
+    // carousel
+    const track=document.getElementById('track');
+    const slides=Array.from(track.children);
+    const prev=document.getElementById('prev');
+    const next=document.getElementById('next');
+    const dotsWrap=document.getElementById('dots');
+    let index=0,timer=null;
+    function buildDots(){dotsWrap.innerHTML='';slides.forEach((_,i)=>{const d=document.createElement('button');d.className='dot'+(i===index?' active':'');d.onclick=()=>go(i,true);dotsWrap.appendChild(d);});}
+    function go(i,user){index=(i+slides.length)%slides.length;track.style.transform=`translateX(${-index*100}%)`;Array.from(dotsWrap.children).forEach((el,di)=>el.classList.toggle('active',di===index));if(user) restart();}
+    function nextSlide(){go(index+1,false)};function prevSlide(){go(index-1,true)};function restart(){clearInterval(timer);timer=setInterval(nextSlide,5000);}
+    next.onclick=nextSlide;prev.onclick=prevSlide;buildDots();restart();
 
-    // URLs
+    // CSV URL
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
     const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=450885199&single=true&output=csv";
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
     const PENTING="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
 
-    function render(list,id,fallback){
+    async function fetchCSV(url){
+      try{
+        const res=await fetch(url+"&_="+Date.now());
+        const text=await res.text();
+        const [head,...rows]=text.split(/\r?\n/).map(r=>r.split(","));
+        const headers=head.map(h=>h.trim().toLowerCase());
+        return rows.filter(r=>r.some(c=>c.trim()!=="")).map(r=>{
+          let o={};headers.forEach((h,i)=>o[h]=r[i]);return o;
+        });
+      }catch(e){console.error(e);return [];}
+    }
+    const pick=(o,keys)=>{for(const k of keys){if(o[k]&&o[k].trim()) return o[k].trim();}return "";}
+
+    function render(list,id,type){
       const wrap=document.getElementById(id);wrap.innerHTML="";
-      if(!list.length){wrap.innerHTML='<div class="card muted">'+fallback+'</div>';return;}
+      if(!list.length){wrap.innerHTML='<div class="card muted">Belum ada '+type+'.</div>';return;}
       list.forEach(r=>{
         const c=document.createElement("div");c.className="card";
-        c.innerHTML=`<h3>${r.title||r.judul||"Tanpa Judul"}</h3>
-          ${r.excerpt||r.konten?'<p class="muted">'+(r.excerpt||r.konten)+'</p>':""}
-          ${r.date||r.tanggal?'<div class="muted">'+(r.date||r.tanggal)+'</div>':""}
-          ${r.href?'<a class="btn-social" href="'+r.href+'" target="_blank">Baca</a>':""}`;
+        if(type==="artikel"){
+          c.innerHTML=`<h3>${pick(r,["title","judul","nama"])}</h3>
+            ${pick(r,["excerpt","ringkasan","konten","deskripsi"])?'<p class="muted">'+pick(r,["excerpt","ringkasan","konten","deskripsi"])+'</p>':""}
+            ${pick(r,["date","tanggal","tgl"]) ? '<div class="muted">'+pick(r,["date","tanggal","tgl"])+'</div>':""}
+            ${pick(r,["href","link","url"]) ? '<a class="btn" href="'+pick(r,["href","link","url"])+'" target="_blank">Baca</a>':""}`;
+        }else if(type==="kajian"){
+          c.innerHTML=`<h3>${pick(r,["judul","title"])}</h3>
+            <div class="muted">👤 ${pick(r,["ustadz","pemateri"])}</div>
+            <div class="muted">🗓️ ${pick(r,["waktu","tanggal","date"])}</div>
+            <div class="muted">📍 ${pick(r,["lokasi","tempat"])}</div>
+            ${pick(r,["link","mapurl","href"]) ? '<a class="btn" href="'+pick(r,["link","mapurl","href"])+'" target="_blank">Detail</a>':""}`;
+        }else{
+          c.innerHTML=`<h3>${pick(r,["judul","title"])}</h3>
+            ${pick(r,["konten","deskripsi"])?'<p class="muted">'+pick(r,["konten","deskripsi"])+'</p>':""}
+            ${pick(r,["tanggal","date","tgl"]) ? '<div class="muted">'+pick(r,["tanggal","date","tgl"])+'</div>':""}
+            ${pick(r,["href","link"]) ? '<a class="btn" href="'+pick(r,["href","link"])+'" target="_blank">Baca</a>':""}`;
+        }
         wrap.appendChild(c);
       });
     }
 
     (async()=>{
-      render(await fetchCSV(INFO),"infoList","Belum ada info.");
-      render(await fetchCSV(PENTING),"urgentList","Belum ada pengumuman.");
-      render(await fetchCSV(ARTICLES),"articlesList","Belum ada artikel.");
-      render(await fetchCSV(KAJIAN),"kajianList","Belum ada kajian.");
+      render(await fetchCSV(INFO),"infoList","info");
+      render(await fetchCSV(PENTING),"urgentList","pengumuman");
+      render(await fetchCSV(ARTICLES),"articlesList","artikel");
+      render(await fetchCSV(KAJIAN),"kajianList","kajian");
     })();
   </script>
 </body>
