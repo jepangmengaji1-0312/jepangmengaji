@@ -1,408 +1,139 @@
 <!doctype html>
-<html lang="id" data-theme="light" id="top">
+<html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Jepang Mengaji — Beranda</title>
-  <meta name="description" content="Jepang Mengaji: info terbaru, pengumuman penting, artikel, donasi, dan arsip YouTube." />
-  <link rel="icon" href="jm.jpeg" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+  <link rel="icon" href="jm.jpeg">
   <style>
     :root{
-      --bg:#ffffff;--bg-soft:#f7fafc;--text:#0f172a;--muted:#64748b;
-      --card:#ffffff;--border:#e5e7eb;--primary:#ef4444;--accent:#0ea5e9;
-      --shadow:0 8px 28px rgba(2,6,23,.08)
+      --bg:#fff;--bg-soft:#f8fafc;--text:#0f172a;
+      --muted:#64748b;--border:#e5e7eb;
+      --primary:#ef4444;--card:#fff;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;scroll-behavior:smooth}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",Arial;background:var(--bg);color:var(--text);position:relative;overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    img{display:block;max-width:100%}
-    .container{max-width:1180px;margin:0 auto;padding:0 16px}
-    /* ====== BACKGROUND WATERMARK (jm.jpeg) ====== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,ui-sans-serif,system-ui;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1100px;margin:0 auto;padding:0 16px}
+    /* background watermark logo */
     body::before{
-      content:""; position:fixed; inset:0; z-index:-2;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.96)),
-        url("jm.jpeg") center/1000px no-repeat;
-      opacity:.35;
+      content:"";position:fixed;inset:0;z-index:-1;
+      background:linear-gradient(rgba(255,255,255,.94),rgba(255,255,255,.94)),
+                 url("jm.jpeg") center/40% no-repeat;
+      opacity:.12;
     }
-    @media(min-width:900px){ body::before{background:
-        linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.95)),
-        url("jm.jpeg") center/1400px no-repeat; } }
-
-    /* ====== NAVBAR ====== */
-    .nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-    .nav-inner{display:flex;align-items:center;gap:10px;padding:10px 0}
-    .brand{display:flex;align-items:center;gap:10px}
-    .brand img{width:34px;height:34px;border-radius:8px;border:1px solid var(--border)}
-    .brand-name{font-weight:800}
-    .burger{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer}
-    .links{display:flex;gap:8px;margin-left:auto}
-    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);padding:8px 12px;border-radius:999px;background:#fff;white-space:nowrap}
-    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
-    .btn.ghost{background:transparent}
-    /* Drawer (mobile) */
-    .drawer{position:fixed;inset:58px 0 auto 0;background:var(--card);border-bottom:1px solid var(--border);box-shadow:var(--shadow);display:none;z-index:55}
-    .drawer.open{display:block}
-    .drawer .menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px}
-    .drawer a{border:1px solid var(--border);padding:10px;border-radius:10px;text-align:center}
-    @media(max-width:980px){ .links{display:none} }
-    @media(min-width:981px){ .burger{display:none} }
-
-    /* ====== CHANNEL HEADER ====== */
-    .channel{border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0b1220,#162132);color:#fff}
-    .banner{aspect-ratio:16/4;width:100%}
-    .channel-bar{display:flex;align-items:center;gap:14px;padding:12px 0}
-    .avatar{width:66px;height:66px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.12);object-fit:cover}
-    .ch-title{margin:0;font-size:20px;font-weight:800;color:#fff}
-    .ch-sub{margin:4px 0 0;color:#cbd5e1;font-size:14px}
-    .actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-
-    /* ====== CAROUSEL ====== */
-    .hero{padding:16px 0}
-    .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft)}
-    .frame{position:relative;width:100%;aspect-ratio:16/9}
-    .track{display:flex;height:100%;transition:transform .5s ease}
-    .slide{min-width:100%;height:100%;position:relative}
-    .slide img{width:100%;height:100%;object-fit:cover}
-    .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.25);font-size:13px}
-    .ctrl{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;pointer-events:none;padding:0 6px}
-    .ctrl button{pointer-events:auto;background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.25);width:40px;height:40px;border-radius:999px}
-    .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
-    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8)}
-    .dot.active{background:#fff}
-
-    /* ====== SECTIONS ====== */
-    .section{padding:18px 0}
-    .section h2{margin:0 0 10px;font-size:18px}
-    .grid{display:grid;gap:12px}
-    .cards-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .cards-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
-    .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
-    .muted{color:var(--muted)}
-
-    /* Feed list + badge tanggal */
-    .updates{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--card)}
-    .updates li{display:flex;gap:12px;align-items:start;border-top:1px solid var(--border);padding:12px}
-    .updates li:first-child{border-top:none}
-    .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--border);background:#fff;color:#111827;min-width:62px;text-align:center}
-
-    footer{border-top:1px solid var(--border);padding:26px 0 40px;color:var(--muted)}
-    .foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    /* Navbar */
+    .nav{position:sticky;top:0;background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);z-index:50}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+    .brand{display:flex;align-items:center;gap:8px;font-weight:700}
+    .brand img{width:34px;height:34px;border-radius:50%}
+    .menu-btn{display:flex;flex-direction:column;gap:4px;cursor:pointer;margin-left:8px}
+    .menu-btn span{width:24px;height:3px;background:var(--text)}
+    ul.nav-links{display:flex;gap:8px;list-style:none}
+    .btn{padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:#fff}
+    .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+    @media(max-width:800px){
+      ul.nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:#fff;padding:10px;border-bottom:1px solid var(--border)}
+      ul.nav-links.open{display:flex}
+    }
+    /* Sections */
+    section{padding:32px 0}
+    h2{margin-bottom:12px;font-size:1.25rem}
+    .cards{display:grid;gap:12px}
+    @media(min-width:768px){.cards{grid-template-columns:repeat(3,1fr)}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
+    .muted{color:var(--muted);font-size:.9rem}
+    /* Donasi */
+    .grid-2{display:grid;gap:16px}
+    @media(min-width:768px){.grid-2{grid-template-columns:1fr 1fr}}
+    footer{border-top:1px solid var(--border);padding:16px;margin-top:40px;color:var(--muted);text-align:center}
   </style>
 </head>
 <body>
-  <!-- NAVBAR -->
-  <header class="nav" aria-label="Navigasi utama">
+  <nav class="nav">
     <div class="container nav-inner">
-      <!-- Burger di kiri -->
-      <button class="burger" id="burger" aria-label="Menu">☰</button>
-      <a href="#top" class="brand" style="text-decoration:none">
-        <img src="jm.jpeg" alt="JM"/><span class="brand-name">Jepang Mengaji</span>
-      </a>
-      <nav class="links" aria-label="Menu">
-        <a class="btn ghost" href="#updates">Info Terbaru</a>
-        <a class="btn ghost" href="#urgent">Penting</a>
-        <a class="btn ghost" href="#artikel">Artikel</a>
-        <a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Arsip YouTube</a>
-      </nav>
-    </div>
-    <!-- Drawer mobile -->
-    <div class="drawer" id="drawer">
-      <div class="menu">
-        <a href="#updates">Info Terbaru</a>
-        <a href="#urgent">Pengumuman</a>
-        <a href="#artikel">Artikel</a>
-        <a href="#donasi">Donasi</a>
-        <a href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">Arsip YouTube</a>
-        <a href="mailto:jepangmengaji@gmail.com">Email</a>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+        <div class="brand"><img src="jm.jpeg" alt="logo"><span>Jepang Mengaji</span></div>
       </div>
-    </div>
-  </header>
-
-  <!-- CHANNEL HEADER -->
-  <section class="channel" role="banner" aria-label="Header Channel">
-    <div class="banner"></div>
-    <div class="container channel-bar">
-      <img class="avatar" src="jm.jpeg" alt="Logo Jepang Mengaji"/>
-      <div>
-        <h1 class="ch-title">Jepang Mengaji</h1>
-        <p class="ch-sub">Mengaji sesuai Sunnah • Kajian, artikel, dokumentasi & donasi</p>
-      </div>
-      <div class="actions">
-        <a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390?sub_confirmation=1" target="_blank" rel="noopener">Subscribe</a>
-        <a class="btn" href="#donasi">Donasi</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- HERO: Carousel -->
-  <section class="hero" aria-label="Dokumentasi kegiatan">
-    <div class="container">
-      <div class="carousel" id="carousel" role="region" aria-roledescription="carousel" aria-label="Foto Kegiatan">
-        <div class="frame">
-          <div class="track" id="track">
-            <!-- fallback repo assets -->
-            <figure class="slide"><img src="assets/slides/1.jpeg" alt="Kegiatan 1"><figcaption class="caption">Kegiatan 1</figcaption></figure>
-            <figure class="slide"><img src="assets/slides/2.jpeg" alt="Kegiatan 2"><figcaption class="caption">Kegiatan 2</figcaption></figure>
-            <figure class="slide"><img src="assets/slides/3.jpeg" alt="Kegiatan 3"><figcaption class="caption">Kegiatan 3</figcaption></figure>
-          </div>
-          <div class="ctrl" aria-hidden="false">
-            <button id="prev" aria-label="Sebelumnya">‹</button>
-            <button id="next" aria-label="Berikutnya">›</button>
-          </div>
-          <div class="dots" id="dots" aria-hidden="true"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INFO TERBARU -->
-  <section id="updates" class="section">
-    <div class="container">
-      <h2>Info Terbaru</h2>
-      <ul class="updates" id="updatesList">
-        <li><span class="badge">Memuat…</span><div class="muted">Mengambil dari spreadsheet…</div></li>
+      <ul class="nav-links" id="navLinks">
+        <li><a class="btn ghost" href="#info">Info Terbaru</a></li>
+        <li><a class="btn ghost" href="#urgent">Penting</a></li>
+        <li><a class="btn ghost" href="#artikel">Artikel</a></li>
+        <li><a class="btn primary" href="https://www.youtube.com/@jepangmengaji1390" target="_blank">Arsip YouTube</a></li>
       </ul>
     </div>
-  </section>
+  </nav>
 
-  <!-- PENGUMUMAN PENTING -->
-  <section id="urgent" class="section">
-    <div class="container">
-      <h2>Pengumuman Penting</h2>
-      <div class="grid cards-2" id="urgentList">
-        <article class="card muted">Memuat dari spreadsheet…</article>
-      </div>
-    </div>
-  </section>
+  <main class="container">
+    <section id="info"><h2>Info Terbaru</h2><div id="infoList" class="cards"></div></section>
+    <section id="urgent"><h2>Pengumuman Penting</h2><div id="urgentList" class="cards"></div></section>
+    <section id="artikel"><h2>Artikel</h2><div id="artikelList" class="cards"></div></section>
 
-  <!-- ARTIKEL -->
-  <section id="artikel" class="section">
-    <div class="container">
-      <h2>Artikel</h2>
-      <div class="grid cards-3" id="articlesList">
-        <article class="card muted">Memuat dari spreadsheet…</article>
-      </div>
-    </div>
-  </section>
-
-  <!-- DONASI -->
-  <section id="donasi" class="section" style="background:var(--bg-soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-    <div class="container grid cards-2">
-      <article class="card">
-        <h3>❤️ Donasi Kegiatan</h3>
-        <p class="muted">Dukung dakwah: operasional, dokumentasi, serta penyelenggaraan kajian.</p>
-        <ul class="muted" style="line-height:1.7;margin:.4rem 0">
-          <li>SMBC/Jenius a.n. <em>Wahyu Setiawan</em> — <strong id="rek-jenius">90220139952</strong> <button class="btn" data-copy="#rek-jenius">Salin</button></li>
-          <li>Yucho Ginko a.n. <em>トリサンボド</em> — <strong id="rek-yucho">14660-20688191</strong> <button class="btn" data-copy="#rek-yucho">Salin</button></li>
-        </ul>
-      </article>
-      <article class="card" id="konfirmasi">
-        <h3>✅ Konfirmasi Transfer</h3>
-        <p class="muted">Kirim format singkat via WhatsApp atau Email (otomatis tersusun).</p>
-        <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr">
-          <input class="btn" id="kf-nama" placeholder="Nama"/>
-          <input class="btn" id="kf-nominal" placeholder="Nominal (cth 100000)"/>
-          <input class="btn" id="kf-tanggal" type="date"/>
-          <select class="btn" id="kf-bank">
-            <option value="">Transfer ke</option><option>SMBC / Jenius</option><option>Yucho</option>
-          </select>
+    <section id="donasi">
+      <h2>Donasi</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>❤️ Donasi Kegiatan</h3>
+          <p class="muted">Dukung dakwah: operasional, dokumentasi, dan kajian.</p>
+          <ul class="muted"><li>SMBC/Jenius a.n. Wahyu Setiawan — <strong>90220139952</strong></li><li>Yucho Ginko a.n. トリサンボド — <strong>14660-20688191</strong></li></ul>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <div class="card">
+          <h3>✅ Konfirmasi Transfer</h3>
+          <input class="btn" id="nama" placeholder="Nama"><br>
+          <input class="btn" id="nominal" placeholder="Nominal"><br>
+          <input class="btn" id="tgl" type="date"><br>
+          <select class="btn" id="bank"><option>SMBC/Jenius</option><option>Yucho</option></select><br>
           <button class="btn primary" id="btnWA">Kirim via WhatsApp</button>
-          <a class="btn" id="btnEmail" href="#">Kirim via Email</a>
         </div>
-      </article>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container foot">
-      <div>© <span id="year"></span> Jepang Mengaji</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <span class="muted">Design by Wahyu</span>
-        <a class="muted" href="https://www.youtube.com/@jepangmengaji1390" target="_blank" rel="noopener">▶️ Arsip YouTube</a>
       </div>
-    </div>
-  </footer>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span> Jepang Mengaji • Design by Wahyu</footer>
 
   <script>
-    // ===== Tahun footer
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('year').textContent=new Date().getFullYear();
+    // burger toggle
+    const menuBtn=document.getElementById('menuBtn');
+    const navLinks=document.getElementById('navLinks');
+    menuBtn.addEventListener('click',()=>navLinks.classList.toggle('open'));
 
-    // ===== Burger / Drawer
-    const burger = document.getElementById('burger');
-    const drawer = document.getElementById('drawer');
-    burger?.addEventListener('click', ()=> drawer.classList.toggle('open'));
-    document.addEventListener('click', e=>{
-      if (!drawer.contains(e.target) && !burger.contains(e.target)) drawer.classList.remove('open');
-    });
-
-    // ===== Copy nomor rekening
-    document.addEventListener('click', e=>{
-      const b=e.target.closest('[data-copy]');
-      if(!b) return;
-      const sel=b.getAttribute('data-copy'); const el=document.querySelector(sel);
-      if(!el) return;
-      navigator.clipboard.writeText(el.textContent.trim()).then(()=>alert('Nomor tersalin'),()=>alert('Gagal menyalin'));
-    });
-
-    // ===== Konfirmasi format
-    function buildKonfirmasi(){
-      const nama=(document.getElementById('kf-nama')||{}).value||'';
-      const nominal=(document.getElementById('kf-nominal')||{}).value||'';
-      const tgl=(document.getElementById('kf-tanggal')||{}).value||'';
-      const bank=(document.getElementById('kf-bank')||{}).value||'';
-      return [
-        "Assalamu'alaikum, saya ingin konfirmasi transfer.",
-        `Nama: ${nama||'-'}`,
-        `Nominal: ${nominal||'-'}`,
-        `Tanggal: ${tgl||'-'}`,
-        `Transfer ke: ${bank||'-'}`
-      ].join('\n');
+    // Konfirmasi WA
+    document.getElementById('btnWA').onclick=()=>{
+      const msg=`Assalamu'alaikum, saya konfirmasi donasi.\nNama: ${nama.value}\nNominal: ${nominal.value}\nTanggal: ${tgl.value}\nBank: ${bank.value}`;
+      window.open(`https://wa.me/817084810427?text=${encodeURIComponent(msg)}`);
     }
-    document.getElementById('btnWA')?.addEventListener('click',()=>{
-      const msg=encodeURIComponent(buildKonfirmasi());
-      window.open(`https://wa.me/817084810427?text=${msg}`,'_blank','noopener');
-    });
-    document.getElementById('btnEmail')?.addEventListener('click', e=>{
-      const body=encodeURIComponent(buildKonfirmasi());
-      e.currentTarget.href=`mailto:jepangmengaji@gmail.com?subject=Konfirmasi%20Transfer&body=${body}`;
-    });
 
-    // ===== Carousel (swipe + autoplay)
-    const track = document.getElementById('track');
-    const slides = Array.from(track.children);
-    const prev = document.getElementById('prev');
-    const next = document.getElementById('next');
-    const dotsWrap = document.getElementById('dots');
-    let index=0, timer=null, startX=0, dragging=false;
-
-    function buildDots(){
-      dotsWrap.innerHTML=''; slides.forEach((_,i)=>{ const d=document.createElement('button');
-        d.className='dot'+(i===0?' active':''); d.addEventListener('click',()=>go(i,true)); dotsWrap.appendChild(d);});
-    }
-    function go(i,user){ index=(i+slides.length)%slides.length; track.style.transform=`translateX(${-index*100}%)`;
-      Array.from(dotsWrap.children).forEach((el,di)=>el.classList.toggle('active', di===index)); if(user) restart();}
-    function nextSlide(){ go(index+1,false); }
-    function prevSlide(){ go(index-1,true); }
-    function restart(){ clearInterval(timer); timer=setInterval(nextSlide,5000); }
-    prev.addEventListener('click',prevSlide); next.addEventListener('click',nextSlide); buildDots(); restart();
-    const frame=document.querySelector('.frame');
-    frame.addEventListener('mouseenter',()=>clearInterval(timer));
-    frame.addEventListener('mouseleave',restart);
-    track.addEventListener('touchstart',e=>{startX=e.touches[0].clientX; dragging=true; clearInterval(timer);},{passive:true});
-    track.addEventListener('touchmove',e=>{ if(!dragging) return; const dx=e.touches[0].clientX-startX; track.style.transform=`translateX(${(-index*100)+(dx/window.innerWidth)*100}%)`;},{passive:true});
-    track.addEventListener('touchend',e=>{dragging=false; const dx=e.changedTouches[0].clientX-startX; if(Math.abs(dx)>60){ dx<0?nextSlide():prevSlide(); } else { go(index,false);} restart();});
-
-    // ====== CSV (sambung Google Sheet)
-    const ARTICLES_CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
-    const INFO_CSV_URL    ="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
-    const URGENT_CSV_URL  ="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
+    // Fetch CSV
+    const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
+    const URGENT="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
+    const ARTIKEL="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
 
     async function fetchCSV(url){
-      const res=await fetch(url+(url.includes('?')?'&':'?')+'_'+Date.now());
-      const text=(await res.text()).replace(/^\uFEFF/,'');
-      const rows=[]; let row=[],cell='',inQuotes=false;
-      for(let i=0;i<text.length;i++){
-        const c=text[i],n=text[i+1];
-        if(c=='"'){ if(inQuotes&&n=='"'){cell+='"'; i++;} else inQuotes=!inQuotes; }
-        else if(c===','&&!inQuotes){ row.push(cell); cell=''; }
-        else if((c==='\n'||(c==='\r'&&n==='\n'))&&!inQuotes){ if(c==='\r') i++; row.push(cell); cell=''; if(row.length) rows.push(row); row=[]; }
-        else{ cell+=c; }
-      }
-      if(cell||row.length){ row.push(cell); rows.push(row); }
-      const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
-      return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
-    }
-    const pick=(o,keys)=>{ for(const k of keys){ const v=o[k]; if(v && String(v).trim()) return String(v).trim(); } return ""; };
-    const fmtDate=(s)=>{ if(!s) return ""; const d=new Date(s); if(isNaN(d)) return s; return d.toLocaleDateString('ja-JP',{year:'numeric',month:'short',day:'numeric'}); };
-    const shortBadge=(s)=>{ if(!s) return ""; const d=new Date(s); if(isNaN(d)) return s; const m=d.toLocaleDateString('id-ID',{month:'short'}); return `${d.getDate()} ${m}`; };
-
-    function renderUpdates(list){
-      const ul=document.getElementById('updatesList'); ul.innerHTML='';
-      if(!list.length){ ul.innerHTML='<li><span class="badge">-</span><div class="muted">Belum ada info.</div></li>'; return; }
-      list.slice(0,8).forEach(it=>{
-        const li=document.createElement('li');
-        const badge=shortBadge(it.date)||'Info';
-        const ext=/^https?:/i.test(it.href);
-        li.innerHTML=`<span class="badge">${badge}</span>
-          <div>
-            ${it.title?`<a ${ext?'target="_blank" rel="noopener"':''} href="${it.href||'#'}">${it.title}</a>`:`<strong>Info</strong>`}
-            ${it.desc?`<div class="muted">${it.desc}</div>`:''}
-          </div>`;
-        ul.appendChild(li);
+      const res=await fetch(url);const txt=await res.text();
+      const rows=txt.split(/\\r?\\n/).map(r=>r.split(','));
+      const head=rows.shift().map(h=>h.trim().toLowerCase());
+      return rows.filter(r=>r.length>1).map(r=>{
+        const obj={};head.forEach((h,i)=>obj[h]=r[i]);return obj;
       });
     }
-    function renderUrgent(list){
-      const wrap=document.getElementById('urgentList'); wrap.innerHTML='';
-      if(!list.length){ wrap.innerHTML='<article class="card muted">Belum ada pengumuman.</article>'; return; }
-      list.slice(0,6).forEach(it=>{
-        const el=document.createElement('article'); el.className='card';
-        el.innerHTML=`<h3 style="margin:.2rem 0">${it.title||'Pengumuman'}</h3>
-          ${it.desc?`<p class="muted" style="margin:.3rem 0">${it.desc}</p>`:''}
-          <div class="muted">${fmtDate(it.date)}</div>`;
-        wrap.appendChild(el);
+    function render(list,id){
+      const el=document.getElementById(id);el.innerHTML='';
+      if(!list.length){el.parentElement.style.display='none';return;}
+      list.forEach(x=>{
+        const c=document.createElement('div');c.className='card';
+        c.innerHTML=`<h3>${x.judul||x.title||'Info'}</h3>
+                     <p class='muted'>${x.konten||x.content||x.desc||''}</p>
+                     <div class='muted'>${x.tanggal||x.date||''}</div>`;
+        el.appendChild(c);
       });
     }
-    function renderArticles(list){
-      const wrap=document.getElementById('articlesList'); wrap.innerHTML='';
-      if(!list.length){ wrap.innerHTML='<article class="card muted">Belum ada artikel.</article>'; return; }
-      list.slice(0,9).forEach(a=>{
-        const el=document.createElement('article'); el.className='card';
-        const ext=/^https?:/i.test(a.href);
-        el.innerHTML=`<h3 style="margin:.2rem 0">${a.title||''}</h3>
-          ${a.excerpt?`<p class="muted" style="margin:.3rem 0">${a.excerpt}</p>`:''}
-          <div class="muted">${fmtDate(a.date)}</div>
-          ${a.href?`<a class="btn" style="margin-top:8px" href="${a.href}" ${ext?'target="_blank" rel="noopener"':''}>Baca</a>`:''}`;
-        wrap.appendChild(el);
-      });
-    }
-
-    async function loadSections(){
-      // Info Terbaru
-      try{
-        const rows=await fetchCSV(INFO_CSV_URL);
-        const items=rows.map(r=>({
-          title: pick(r,['judul','title','nama']),
-          date:  pick(r,['tanggal','date','tgl','waktu']),
-          href:  pick(r,['href','link','url']),
-          desc:  pick(r,['konten','content','deskripsi','desc','ringkasan'])
-        })).filter(x=>x.title||x.desc||x.href)
-          .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-        renderUpdates(items);
-      }catch(e){ console.warn('INFO error',e); renderUpdates([]); }
-
-      // Pengumuman Penting
-      try{
-        const rows=await fetchCSV(URGENT_CSV_URL);
-        const items=rows.map(r=>({
-          title: pick(r,['judul','title','pengumuman']),
-          date:  pick(r,['tanggal','date','tgl']),
-          desc:  pick(r,['konten','content','deskripsi','desc','ringkasan'])
-        })).filter(x=>x.title||x.desc)
-          .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-        renderUrgent(items);
-      }catch(e){ console.warn('URGENT error',e); renderUrgent([]); }
-
-      // Artikel
-      try{
-        const rows=await fetchCSV(ARTICLES_CSV_URL);
-        const items=rows.map(r=>({
-          title:   pick(r,['title','judul','nama','artikel']),
-          excerpt: pick(r,['excerpt','ringkasan','deskripsi','desc','konten','content']),
-          date:    pick(r,['date','tanggal','published','tgl']),
-          href:    pick(r,['href','link','url'])
-        })).filter(x=>x.title||x.href)
-          .sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-        renderArticles(items);
-      }catch(e){ console.warn('ARTIKEL error',e); renderArticles([]); }
-    }
-    loadSections();
+    (async()=>{
+      render(await fetchCSV(INFO),'infoList');
+      render(await fetchCSV(URGENT),'urgentList');
+      render(await fetchCSV(ARTIKEL),'artikelList');
+    })();
   </script>
 </body>
 </html>
