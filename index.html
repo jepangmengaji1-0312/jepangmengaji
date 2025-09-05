@@ -16,13 +16,39 @@
     a{text-decoration:none;color:inherit}
 
     /* NAVBAR */
-    .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
     .brand{display:flex;gap:10px;align-items:center;font-weight:800}
     .brand img{width:36px;height:36px;border-radius:8px;border:1px solid var(--border)}
-    .nav-links{display:flex;gap:8px;align-items:center;overflow:auto}
     .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px}
     .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+
+    /* Burger */
+    .burger{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;border:1px solid var(--border);background:#fff}
+    .burger span{width:18px;height:2px;background:var(--text);position:relative;display:block}
+    .burger span::before,.burger span::after{content:"";position:absolute;left:0;width:18px;height:2px;background:var(--text);transition:transform .2s ease,opacity .2s ease}
+    .burger span::before{top:-6px}.burger span::after{top:6px}
+    .nav.open .burger span{background:transparent}
+    .nav.open .burger span::before{transform:translateY(6px) rotate(45deg)}
+    .nav.open .burger span::after{transform:translateY(-6px) rotate(-45deg)}
+
+    /* Mobile menu (drawer) */
+    .nav-overlay{display:none;position:fixed;inset:0;background:rgba(2,6,23,.4);z-index:55}
+    .nav-links{
+      position:fixed;top:64px;right:12px;left:12px;display:none;flex-direction:column;gap:8px;
+      background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;z-index:56
+    }
+    .nav.open .nav-overlay{display:block}
+    .nav.open .nav-links{display:flex}
+
+    /* Desktop nav */
+    @media(min-width:1024px){
+      .burger{display:none}
+      .nav-overlay{display:none !important}
+      .nav-links{
+        position:static;display:flex !important;flex-direction:row;background:transparent;border:0;box-shadow:none;padding:0;gap:8px
+      }
+    }
 
     /* LAYOUT */
     .layout{display:grid;grid-template-columns:1fr;gap:16px}
@@ -30,16 +56,18 @@
     .sidebar{display:none}
     @media(min-width:1024px){ .sidebar{display:block;position:sticky;top:64px;height:calc(100vh - 80px)} }
     .sidecard{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
+    .sidecard a{display:block;padding:6px 8px;border-radius:8px}
+    .sidecard a:hover{background:var(--bg-soft)}
 
     /* SLIDESHOW */
     .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft);margin:18px 0}
-    .frame{aspect-ratio:16/9;position:relative;width:100%}
+    .frame{aspect-ratio:16/9;position:relative;width:100%;touch-action:pan-y}
     .track{display:flex;height:100%;transition:transform .5s ease}
     .slide{min-width:100%;height:100%}
     .slide img{width:100%;height:100%;object-fit:cover}
     .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:14px}
-    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 6px}
-    .ctrl button{background:rgba(0,0,0,.55);color:#fff;border:none;width:40px;height:40px;border-radius:999px}
+    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 6px;pointer-events:none}
+    .ctrl button{background:rgba(0,0,0,.55);color:#fff;border:none;width:40px;height:40px;border-radius:999px;pointer-events:auto}
     .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
     .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5)}
     .dot.active{background:#fff}
@@ -50,7 +78,7 @@
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
-    .card img{width:100%;border-radius:8px;margin-bottom:8px}
+    .card img{width:100%;border-radius:8px;margin-bottom:8px;display:block;object-fit:cover;max-height:380px}
     .muted{color:var(--muted)}
 
     footer{border-top:1px solid var(--border);padding:20px 0;color:var(--muted);text-align:center}
@@ -58,15 +86,23 @@
 </head>
 <body>
   <!-- NAV -->
-  <nav class="nav">
+  <nav class="nav" id="nav">
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
     <div class="container nav-inner">
       <div class="brand"><img src="jm.jpeg" alt="JM"><span>Jepang Mengaji</span></div>
-      <div class="nav-links">
-        <a class="btn" href="#updates">Info Terbaru</a>
-        <a class="btn" href="#urgent">Penting</a>
-        <a class="btn" href="#artikel">Artikel</a>
-        <a class="btn" href="#kajian">Kajian</a>
-        <a class="btn primary" href="https://www.youtube.com/@JepangMengaji" target="_blank">Arsip YouTube</a>
+
+      <!-- Burger untuk mobile -->
+      <button class="burger" id="burger" aria-label="Buka menu" aria-controls="navLinks" aria-expanded="false">
+        <span></span>
+      </button>
+
+      <!-- Links (dipakai untuk desktop & jadi drawer di mobile) -->
+      <div class="nav-links" id="navLinks" role="menu">
+        <a class="btn" href="#updates" role="menuitem">Info Terbaru</a>
+        <a class="btn" href="#urgent" role="menuitem">Penting</a>
+        <a class="btn" href="#artikel" role="menuitem">Artikel</a>
+        <a class="btn" href="#kajian" role="menuitem">Kajian</a>
+        <a class="btn primary" href="https://www.youtube.com/@JepangMengaji" target="_blank" role="menuitem" rel="noopener">Arsip YouTube</a>
       </div>
     </div>
   </nav>
@@ -87,13 +123,13 @@
     <main>
       <!-- SLIDESHOW -->
       <section class="carousel" id="carousel">
-        <div class="frame">
+        <div class="frame" id="frame">
           <div class="track" id="track">
             <div class="slide"><img src="assets/slides/1.jpeg" alt="Slide 1"><div class="caption">Kegiatan 1</div></div>
             <div class="slide"><img src="assets/slides/2.jpeg" alt="Slide 2"><div class="caption">Kegiatan 2</div></div>
             <div class="slide"><img src="assets/slides/3.jpeg" alt="Slide 3"><div class="caption">Kegiatan 3</div></div>
           </div>
-          <div class="ctrl"><button id="prev">‹</button><button id="next">›</button></div>
+          <div class="ctrl"><button id="prev" aria-label="Sebelumnya">‹</button><button id="next" aria-label="Berikutnya">›</button></div>
           <div class="dots" id="dots"></div>
         </div>
       </section>
@@ -111,11 +147,35 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // ===== BURGER / MOBILE NAV =====
+    const nav = document.getElementById('nav');
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+    const navOverlay = document.getElementById('navOverlay');
+
+    function closeNav(){
+      nav.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    }
+    function openNav(){
+      nav.classList.add('open');
+      burger.setAttribute('aria-expanded','true');
+    }
+    burger.addEventListener('click',()=>{
+      if(nav.classList.contains('open')) closeNav(); else openNav();
+    });
+    navOverlay.addEventListener('click', closeNav);
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeNav(); });
+    // Tutup drawer saat salah satu link diklik (mobile)
+    navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeNav));
+
     // ===== SLIDESHOW =====
     const track=document.getElementById('track');
     const dotsWrap=document.getElementById('dots');
+    const frame=document.getElementById('frame');
     const slides=[...track.children];
-    let idx=0,timer=null;
+    let idx=0,timer=null,startX=null,dragging=false;
+
     function buildDots(){
       dotsWrap.innerHTML='';
       slides.forEach((_,i)=>{
@@ -137,6 +197,18 @@
     document.getElementById('next').onclick=nextSlide;
     document.getElementById('prev').onclick=prevSlide;
     buildDots(); restart();
+
+    // Swipe (mobile-friendly)
+    frame.addEventListener('pointerdown', (e)=>{ startX=e.clientX; dragging=true; clearInterval(timer); frame.setPointerCapture(e.pointerId); });
+    frame.addEventListener('pointermove', (e)=>{ if(!dragging||startX==null) return; });
+    frame.addEventListener('pointerup', (e)=>{
+      if(!dragging) return;
+      const dx=e.clientX-startX;
+      const threshold=30;
+      if(dx>threshold) prevSlide(); else if(dx<-threshold) nextSlide(); else restart();
+      dragging=false; startX=null;
+    });
+    frame.addEventListener('pointercancel', ()=>{ dragging=false; startX=null; restart(); });
 
     // ===== CSV =====
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
@@ -160,20 +232,36 @@
       return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
     }
 
+    // Helper: ambil nilai pertama yang ada
     const pick=(o,keys)=>{for(const k of keys){const v=o[k];if(v&&v.trim()) return v;}return "";};
+
+    // Helper: konversi link Google Drive jadi direct image
+    function directImage(u){
+      if(!u) return "";
+      if(/drive\.google\.com/.test(u)){
+        const m = u.match(/\/d\/([^/]+)/) || u.match(/[?&]id=([^&]+)/);
+        const id = m && m[1];
+        if(id) return `https://drive.google.com/uc?export=view&id=${id}`;
+      }
+      return u;
+    }
 
     function render(list,id,fallback){
       const wrap=document.getElementById(id); wrap.innerHTML="";
       if(!list.length){wrap.innerHTML='<div class="card muted">'+fallback+'</div>';return;}
       list.forEach(it=>{
         const el=document.createElement("article"); el.className="card";
-        const poster=pick(it,["poster","gambar","image"]);
+        const poster = directImage(pick(it,["poster","gambar","image","foto","thumbnail","poster_url"]));
+        const title  = pick(it,["title","judul","nama"]) || "(Tanpa judul)";
+        const desc   = pick(it,["excerpt","konten","deskripsi","description"]);
+        const date   = pick(it,["date","tanggal","tgl"]);
+        const href   = pick(it,["href","link","url"]);
         el.innerHTML=`
-          ${poster ? `<img src="${poster}" alt="Poster">` : ""}
-          <h3>${pick(it,["title","judul","nama"])}</h3>
-          ${pick(it,["excerpt","konten","deskripsi"]) ? `<p class="muted">${pick(it,["excerpt","konten","deskripsi"])}</p>` : ""}
-          ${pick(it,["date","tanggal","tgl"]) ? `<div class="muted">${pick(it,["date","tanggal","tgl"])}</div>` : ""}
-          ${pick(it,["href","link","url"]) ? `<a class="btn" href="${pick(it,["href","link","url"])}" target="_blank">Baca</a>` : ""}
+          ${poster ? `<img src="${poster}" alt="Poster ${title}">` : ""}
+          <h3>${title}</h3>
+          ${desc ? `<p class="muted">${desc}</p>` : ""}
+          ${date ? `<div class="muted">${date}</div>` : ""}
+          ${href ? `<a class="btn" href="${href}" target="_blank" rel="noopener">Baca</a>` : ""}
         `;
         wrap.appendChild(el);
       });
