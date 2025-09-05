@@ -11,11 +11,10 @@
       --card:#fff;--border:#e5e7eb;--primary:#ef4444;
       --shadow:0 6px 24px rgba(2,6,23,.08)
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%}
-    body{font-family:Inter,ui-sans-serif,system-ui,Arial;background:var(--bg);color:var(--text)}
-    a{color:inherit;text-decoration:none}
+    body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Arial;background:var(--bg);color:var(--text)}
     .container{max-width:1180px;margin:0 auto;padding:0 16px}
+    a{text-decoration:none;color:inherit}
+
     /* NAVBAR */
     .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
@@ -24,28 +23,41 @@
     .nav-links{display:flex;gap:8px;align-items:center;overflow:auto}
     .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px}
     .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
-    /* LAYOUT + SIDEBAR */
+
+    /* LAYOUT */
     .layout{display:grid;grid-template-columns:1fr;gap:16px}
     @media(min-width:1024px){ .layout{grid-template-columns:260px 1fr} }
     .sidebar{display:none}
     @media(min-width:1024px){ .sidebar{display:block;position:sticky;top:64px;height:calc(100vh - 80px)} }
     .sidecard{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
-    .sidecard h3{margin:4px 0 8px;font-size:15px}
-    .sidecard a{display:block;padding:8px;border-radius:8px}
-    .sidecard a:hover{background:var(--bg-soft)}
-    /* SECTIONS */
+
+    /* SLIDESHOW */
+    .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft);margin:18px 0}
+    .frame{aspect-ratio:16/9;position:relative;width:100%}
+    .track{display:flex;height:100%;transition:transform .5s ease}
+    .slide{min-width:100%;height:100%}
+    .slide img{width:100%;height:100%;object-fit:cover}
+    .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:14px}
+    .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 6px}
+    .ctrl button{background:rgba(0,0,0,.55);color:#fff;border:none;width:40px;height:40px;border-radius:999px}
+    .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
+    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5)}
+    .dot.active{background:#fff}
+
+    /* CARDS */
     .section{padding:18px 0}
     .section h2{margin:0 0 10px}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
+    .card img{width:100%;border-radius:8px;margin-bottom:8px}
     .muted{color:var(--muted)}
-    .badge{display:inline-block;font-size:12px;border:1px solid var(--border);border-radius:999px;padding:2px 8px;background:#fff}
+
     footer{border-top:1px solid var(--border);padding:20px 0;color:var(--muted);text-align:center}
   </style>
 </head>
 <body>
-  <!-- NAVBAR -->
+  <!-- NAV -->
   <nav class="nav">
     <div class="container nav-inner">
       <div class="brand"><img src="jm.jpeg" alt="JM"><span>Jepang Mengaji</span></div>
@@ -69,46 +81,28 @@
         <a href="#artikel">📖 Artikel</a>
         <a href="#kajian">📚 Kajian</a>
         <a href="#donasi">❤️ Donasi</a>
-        <a href="https://www.youtube.com/@JepangMengaji" target="_blank">▶️ Arsip YouTube</a>
-        <hr>
-        <a href="https://chat.whatsapp.com/Fg2UKlhT5s9B7oYeTsMMKO" target="_blank">📲 WhatsApp</a>
-        <a href="https://t.me/jepangmengaji_channel" target="_blank">📣 Telegram</a>
-        <a href="mailto:jepangmengaji@gmail.com">✉️ Email</a>
       </div>
     </aside>
 
     <main>
-      <!-- Info Terbaru -->
-      <section id="updates" class="section">
-        <h2>Info Terbaru</h2>
-        <div id="updatesList" class="cards"></div>
-      </section>
-      <!-- Penting -->
-      <section id="urgent" class="section">
-        <h2>Pengumuman Penting</h2>
-        <div id="urgentList" class="cards"></div>
-      </section>
-      <!-- Artikel -->
-      <section id="artikel" class="section">
-        <h2>Artikel</h2>
-        <div id="articlesList" class="cards"></div>
-      </section>
-      <!-- Kajian -->
-      <section id="kajian" class="section">
-        <h2>Kajian</h2>
-        <div id="kajianList" class="cards"></div>
-      </section>
-      <!-- Donasi -->
-      <section id="donasi" class="section">
-        <h2>Donasi</h2>
-        <div class="cards">
-          <div class="card">
-            <h3>❤️ Donasi Kegiatan</h3>
-            <p class="muted">SMBC/Jenius a.n. Wahyu Setiawan — <b>90220139952</b></p>
-            <p class="muted">Yucho Ginko a.n. トリサンボド — <b>14660-20688191</b></p>
+      <!-- SLIDESHOW -->
+      <section class="carousel" id="carousel">
+        <div class="frame">
+          <div class="track" id="track">
+            <div class="slide"><img src="assets/slides/1.jpeg" alt="Slide 1"><div class="caption">Kegiatan 1</div></div>
+            <div class="slide"><img src="assets/slides/2.jpeg" alt="Slide 2"><div class="caption">Kegiatan 2</div></div>
+            <div class="slide"><img src="assets/slides/3.jpeg" alt="Slide 3"><div class="caption">Kegiatan 3</div></div>
           </div>
+          <div class="ctrl"><button id="prev">‹</button><button id="next">›</button></div>
+          <div class="dots" id="dots"></div>
         </div>
       </section>
+
+      <!-- Sections -->
+      <section id="updates" class="section"><h2>Info Terbaru</h2><div id="updatesList" class="cards"></div></section>
+      <section id="urgent" class="section"><h2>Pengumuman Penting</h2><div id="urgentList" class="cards"></div></section>
+      <section id="artikel" class="section"><h2>Artikel</h2><div id="articlesList" class="cards"></div></section>
+      <section id="kajian" class="section"><h2>Kajian</h2><div id="kajianList" class="cards"></div></section>
     </main>
   </div>
 
@@ -117,13 +111,39 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // CSV URLs
+    // ===== SLIDESHOW =====
+    const track=document.getElementById('track');
+    const dotsWrap=document.getElementById('dots');
+    const slides=[...track.children];
+    let idx=0,timer=null;
+    function buildDots(){
+      dotsWrap.innerHTML='';
+      slides.forEach((_,i)=>{
+        const b=document.createElement('button');
+        b.className='dot'+(i===idx?' active':'');
+        b.onclick=()=>go(i,true);
+        dotsWrap.appendChild(b);
+      });
+    }
+    function go(i,user){
+      idx=(i+slides.length)%slides.length;
+      track.style.transform=`translateX(${-idx*100}%)`;
+      [...dotsWrap.children].forEach((d,di)=>d.classList.toggle('active',di===idx));
+      if(user) restart();
+    }
+    function nextSlide(){ go(idx+1,false); }
+    function prevSlide(){ go(idx-1,true); }
+    function restart(){ clearInterval(timer); timer=setInterval(nextSlide,5000); }
+    document.getElementById('next').onclick=nextSlide;
+    document.getElementById('prev').onclick=prevSlide;
+    buildDots(); restart();
+
+    // ===== CSV =====
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
     const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=450885199&single=true&output=csv";
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
     const PENTING="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=215662022&single=true&output=csv";
 
-    // CSV parser (quotes-aware)
     async function fetchCSV(url){
       const res=await fetch(url+"&_="+Date.now());
       const text=(await res.text()).replace(/^\uFEFF/,'');
@@ -147,7 +167,9 @@
       if(!list.length){wrap.innerHTML='<div class="card muted">'+fallback+'</div>';return;}
       list.forEach(it=>{
         const el=document.createElement("article"); el.className="card";
+        const poster=pick(it,["poster","gambar","image"]);
         el.innerHTML=`
+          ${poster ? `<img src="${poster}" alt="Poster">` : ""}
           <h3>${pick(it,["title","judul","nama"])}</h3>
           ${pick(it,["excerpt","konten","deskripsi"]) ? `<p class="muted">${pick(it,["excerpt","konten","deskripsi"])}</p>` : ""}
           ${pick(it,["date","tanggal","tgl"]) ? `<div class="muted">${pick(it,["date","tanggal","tgl"])}</div>` : ""}
