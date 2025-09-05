@@ -6,8 +6,12 @@
   <title>Jepang Mengaji — Beranda</title>
   <link rel="icon" href="jm.jpeg" />
   <style>
-    :root{ --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
-      --card:#fff;--border:#e5e7eb;--primary:#ef4444; --shadow:0 6px 24px rgba(2,6,23,.08) }
+    :root{
+      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
+      --card:#fff;--border:#e5e7eb;--primary:#ef4444;--shadow:0 6px 24px rgba(2,6,23,.08);
+      /* Ubah ke 'cover' bila ingin poster menutup frame (meski terpotong) */
+      --poster-fit: contain;
+    }
     body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Arial;background:var(--bg);color:var(--text)}
     .container{max-width:1180px;margin:0 auto;padding:0 16px}
     a{text-decoration:none;color:inherit}
@@ -63,18 +67,20 @@
     #carousel .slide img{width:100%;height:100%;object-fit:cover}
     #carousel .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:14px}
 
-    /* POSTER CAROUSEL (portrait) */
-    #posterCarousel .frame{aspect-ratio:3/4; max-height:540px}
-    #posterCarousel .slide{display:flex;align-items:center;justify-content:center;padding:16px}
-    #posterCarousel .slide a{display:block;max-width:100%;max-height:100%}
+    /* POSTER CAROUSEL (portrait) — FULL BLEED + TAMPIL UTUH */
+    #poster .card{padding:0;overflow:hidden}
+    #poster .poster-caption{padding:12px}
+    #posterCarousel{border:0}
+    #posterCarousel .frame{aspect-ratio:3/4;max-height:540px;background:#fff}
+    #posterCarousel .slide{display:flex;align-items:center;justify-content:center;padding:0}
+    #posterCarousel .slide a{display:block;width:100%;height:100%}
     #posterCarousel .slide img{
-      display:block;max-width:100%;max-height:100%;
-      object-fit:contain;background:#fff;border:1px solid var(--border);
-      border-radius:12px;box-shadow:var(--shadow)
+      display:block;width:100%;height:100%;
+      object-fit:var(--poster-fit);
+      background:#fff;border:0;border-radius:0;box-shadow:none
     }
     #poster .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
     #poster .topbar .muted{font-size:14px}
-    .poster-caption{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.55}
 
     /* CARDS + FOOTER */
     .section{padding:18px 0} .section h2{margin:0 0 10px}
@@ -238,7 +244,7 @@
         const items = files.filter(f=>/^image\//.test(f.mimeType)).slice(0,12);
         if(!items.length) throw new Error('Tidak ada gambar');
 
-        // Pakai endpoint thumbnail (stabil untuk <img>), fallback ke uc?export=view saat gagal load
+        // Thumbnail stabil untuk <img>; fallback ke direct jika gagal
         pTrack.innerHTML = items.map(f=>{
           const thumb = `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200`;
           const direct = f.url || `https://drive.google.com/uc?export=view&id=${f.id}`;
