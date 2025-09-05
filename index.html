@@ -82,6 +82,14 @@
     .muted{color:var(--muted)}
 
     footer{border-top:1px solid var(--border);padding:20px 0;color:var(--muted);text-align:center}
+
+    /* === Poster (Google Drive folder embed) === */
+    .gdrive{
+      width:100%;
+      height:min(80vh,720px);
+      border:0;
+      border-radius:12px;
+    }
   </style>
 </head>
 <body>
@@ -100,6 +108,7 @@
       <div class="nav-links" id="navLinks" role="menu">
         <a class="btn" href="#updates" role="menuitem">Info Terbaru</a>
         <a class="btn" href="#urgent" role="menuitem">Penting</a>
+        <a class="btn" href="#poster" role="menuitem">Poster</a>
         <a class="btn" href="#artikel" role="menuitem">Artikel</a>
         <a class="btn" href="#kajian" role="menuitem">Kajian</a>
         <a class="btn primary" href="https://www.youtube.com/@JepangMengaji" target="_blank" role="menuitem" rel="noopener">Arsip YouTube</a>
@@ -114,6 +123,7 @@
         <h3>Navigasi</h3>
         <a href="#updates">🆕 Info Terbaru</a>
         <a href="#urgent">⚠️ Pengumuman Penting</a>
+        <a href="#poster">🖼️ Poster</a>
         <a href="#artikel">📖 Artikel</a>
         <a href="#kajian">📚 Kajian</a>
         <a href="#donasi">❤️ Donasi</a>
@@ -131,6 +141,19 @@
           </div>
           <div class="ctrl"><button id="prev" aria-label="Sebelumnya">‹</button><button id="next" aria-label="Berikutnya">›</button></div>
           <div class="dots" id="dots"></div>
+        </div>
+      </section>
+
+      <!-- POSTER (folder Google Drive) -->
+      <section id="poster" class="section">
+        <h2>Poster</h2>
+        <div class="card">
+          <iframe
+            class="gdrive"
+            src="https://drive.google.com/embeddedfolderview?id=1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH#grid"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          ></iframe>
         </div>
       </section>
 
@@ -210,7 +233,7 @@
     });
     frame.addEventListener('pointercancel', ()=>{ dragging=false; startX=null; restart(); });
 
-    // ===== CSV =====
+    // ===== CSV SECTIONS =====
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
     const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=450885199&single=true&output=csv";
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
