@@ -6,11 +6,8 @@
   <title>Jepang Mengaji — Beranda</title>
   <link rel="icon" href="jm.jpeg" />
   <style>
-    :root{
-      --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
-      --card:#fff;--border:#e5e7eb;--primary:#ef4444;
-      --shadow:0 6px 24px rgba(2,6,23,.08)
-    }
+    :root{ --bg:#ffffff;--bg-soft:#f8fafc;--text:#0f172a;--muted:#475569;
+      --card:#fff;--border:#e5e7eb;--primary:#ef4444; --shadow:0 6px 24px rgba(2,6,23,.08) }
     body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Arial;background:var(--bg);color:var(--text)}
     .container{max-width:1180px;margin:0 auto;padding:0 16px}
     a{text-decoration:none;color:inherit}
@@ -32,20 +29,13 @@
     .nav.open .burger span::before{transform:translateY(6px) rotate(45deg)}
     .nav.open .burger span::after{transform:translateY(-6px) rotate(-45deg)}
 
-    /* Mobile menu (drawer) */
+    /* Drawer */
     .nav-overlay{display:none;position:fixed;inset:0;background:rgba(2,6,23,.4);z-index:55}
-    .nav-links{
-      position:fixed;top:64px;right:12px;left:12px;display:none;flex-direction:column;gap:8px;
-      background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;z-index:56
-    }
-    .nav.open .nav-overlay{display:block}
-    .nav.open .nav-links{display:flex}
+    .nav-links{position:fixed;top:64px;right:12px;left:12px;display:none;flex-direction:column;gap:8px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;z-index:56}
+    .nav.open .nav-overlay{display:block} .nav.open .nav-links{display:flex}
     @media(min-width:1024px){
-      .burger{display:none}
-      .nav-overlay{display:none !important}
-      .nav-links{
-        position:static;display:flex !important;flex-direction:row;background:transparent;border:0;box-shadow:none;padding:0;gap:8px
-      }
+      .burger{display:none} .nav-overlay{display:none!important}
+      .nav-links{position:static;display:flex!important;flex-direction:row;background:transparent;border:0;box-shadow:none;padding:0;gap:8px}
     }
 
     /* LAYOUT */
@@ -57,46 +47,43 @@
     .sidecard a{display:block;padding:6px 8px;border-radius:8px}
     .sidecard a:hover{background:var(--bg-soft)}
 
-    /* SLIDESHOW */
+    /* GENERIC CAROUSEL */
     .carousel{position:relative;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft);margin:18px 0}
-    .frame{aspect-ratio:16/9;position:relative;width:100%;touch-action:pan-y}
+    .frame{position:relative;width:100%;touch-action:pan-y}
     .track{display:flex;height:100%;transition:transform .5s ease}
     .slide{min-width:100%;height:100%}
-    .slide img{width:100%;height:100%;object-fit:cover}
-    .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:14px}
     .ctrl{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 6px;pointer-events:none}
     .ctrl button{background:rgba(0,0,0,.55);color:#fff;border:none;width:40px;height:40px;border-radius:999px;pointer-events:auto}
     .dots{position:absolute;left:0;right:0;bottom:8px;display:flex;gap:6px;justify-content:center}
     .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5)}
     .dot.active{background:#fff}
 
-    /* CARDS */
-    .section{padding:18px 0}
-    .section h2{margin:0 0 10px}
+    /* HERO (landscape) */
+    #carousel .frame{aspect-ratio:16/9}
+    #carousel .slide img{width:100%;height:100%;object-fit:cover}
+    #carousel .caption{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.55);color:#fff;padding:6px 10px;border-radius:10px;font-size:14px}
+
+    /* POSTER CAROUSEL (portrait) */
+    #posterCarousel .frame{aspect-ratio:3/4; max-height:540px}
+    #posterCarousel .slide{display:flex;align-items:center;justify-content:center;padding:16px}
+    #posterCarousel .slide a{display:block;max-width:100%;max-height:100%}
+    #posterCarousel .slide img{
+      display:block;max-width:100%;max-height:100%;
+      object-fit:contain;background:#fff;border:1px solid var(--border);
+      border-radius:12px;box-shadow:var(--shadow)
+    }
+    #poster .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    #poster .topbar .muted{font-size:14px}
+    .poster-caption{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.55}
+
+    /* CARDS + FOOTER */
+    .section{padding:18px 0} .section h2{margin:0 0 10px}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
     .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
     .card img{width:100%;border-radius:8px;margin-bottom:8px;display:block;object-fit:cover;max-height:380px}
     .muted{color:var(--muted)}
-
     footer{border-top:1px solid var(--border);padding:20px 0;color:var(--muted);text-align:center}
-
-    /* === Poster (Google Drive embed, diperkecil & ada caption) === */
-    #poster .poster-card{max-width:880px;margin:0 auto}
-    .gdrive{
-      width:100%;
-      height:360px;              /* ↓ kecil di HP */
-      border:0;
-      border-radius:12px;
-    }
-    @media(min-width:720px){ .gdrive{height:440px;} }   /* ↓ sedikit lebih tinggi di tablet */
-    @media(min-width:1024px){ .gdrive{height:480px;} }  /* ↓ desktop */
-    .poster-caption{
-      margin-top:10px;
-      font-size:14px;
-      color:var(--muted);
-      line-height:1.5;
-    }
   </style>
 </head>
 <body>
@@ -105,13 +92,7 @@
     <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
     <div class="container nav-inner">
       <div class="brand"><img src="jm.jpeg" alt="JM"><span>Jepang Mengaji</span></div>
-
-      <!-- Burger untuk mobile -->
-      <button class="burger" id="burger" aria-label="Buka menu" aria-controls="navLinks" aria-expanded="false">
-        <span></span>
-      </button>
-
-      <!-- Links (desktop & drawer mobile) -->
+      <button class="burger" id="burger" aria-label="Buka menu" aria-controls="navLinks" aria-expanded="false"><span></span></button>
       <div class="nav-links" id="navLinks" role="menu">
         <a class="btn" href="#updates" role="menuitem">Info Terbaru</a>
         <a class="btn" href="#urgent" role="menuitem">Penting</a>
@@ -138,7 +119,7 @@
     </aside>
 
     <main>
-      <!-- SLIDESHOW -->
+      <!-- HERO CAROUSEL -->
       <section class="carousel" id="carousel">
         <div class="frame" id="frame">
           <div class="track" id="track">
@@ -151,20 +132,29 @@
         </div>
       </section>
 
-      <!-- POSTER (folder Google Drive, embed diperkecil + teks bawah) -->
+      <!-- POSTER CAROUSEL -->
       <section id="poster" class="section">
-        <h2>Poster</h2>
-        <div class="card poster-card">
-          <iframe
-            class="gdrive"
-            src="https://drive.google.com/embeddedfolderview?id=1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH#grid"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-            title="Galeri Poster"
-          ></iframe>
-          <p class="poster-caption">
-            Catatan: klik poster untuk membuka ukuran penuh. Tambahkan teks apa pun di sini—misalnya
-            <em>“Open donasi program Dauroh Fuyu Jepang Mengaji. Silakan sebar ke kawan-kawan.”</em>
+        <div class="topbar">
+          <h2>Poster</h2>
+          <a class="btn" href="https://drive.google.com/embeddedfolderview?id=1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH#grid" target="_blank" rel="noopener">Lihat semua</a>
+        </div>
+        <div class="card">
+          <div class="carousel" id="posterCarousel">
+            <div class="frame" id="pFrame">
+              <div class="track" id="pTrack">
+                <!-- Fallback 1 slide (diganti otomatis bila feed tersedia) -->
+                <div class="slide">
+                  <a href="#" aria-label="Poster">
+                    <img src="assets/slides/1.jpeg" alt="Poster">
+                  </a>
+                </div>
+              </div>
+              <div class="ctrl"><button id="pPrev" aria-label="Sebelumnya">‹</button><button id="pNext" aria-label="Berikutnya">›</button></div>
+              <div class="dots" id="pDots"></div>
+            </div>
+          </div>
+          <p class="poster-caption" id="posterNote">
+            Tambahkan teks apa pun di sini, misalnya <em>“Open donasi Dauroh Fuyu. Silakan bantu sebar poster ini.”</em>
           </p>
         </div>
       </section>
@@ -182,61 +172,89 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ===== BURGER / MOBILE NAV =====
-    const nav = document.getElementById('nav');
-    const burger = document.getElementById('burger');
-    const navLinks = document.getElementById('navLinks');
-    const navOverlay = document.getElementById('navOverlay');
-
+    /* ====== BURGER ====== */
+    const nav=document.getElementById('nav'), burger=document.getElementById('burger'),
+          navLinks=document.getElementById('navLinks'), navOverlay=document.getElementById('navOverlay');
     function closeNav(){ nav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
     function openNav(){ nav.classList.add('open'); burger.setAttribute('aria-expanded','true'); }
-    burger.addEventListener('click',()=>{ nav.classList.contains('open') ? closeNav() : openNav(); });
-    navOverlay.addEventListener('click', closeNav);
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeNav(); });
+    burger.addEventListener('click',()=> nav.classList.contains('open')?closeNav():openNav());
+    navOverlay?.addEventListener('click', closeNav);
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape') closeNav(); });
     navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeNav));
 
-    // ===== SLIDESHOW =====
-    const track=document.getElementById('track');
-    const dotsWrap=document.getElementById('dots');
-    const frame=document.getElementById('frame');
-    const slides=[...track.children];
-    let idx=0,timer=null,startX=null,dragging=false;
-
-    function buildDots(){
-      dotsWrap.innerHTML='';
-      slides.forEach((_,i)=>{
-        const b=document.createElement('button');
-        b.className='dot'+(i===idx?' active':'');
-        b.onclick=()=>go(i,true);
-        dotsWrap.appendChild(b);
-      });
-    }
-    function go(i,user){
-      idx=(i+slides.length)%slides.length;
-      track.style.transform=`translateX(${-idx*100}%)`;
-      [...dotsWrap.children].forEach((d,di)=>d.classList.toggle('active',di===idx));
-      if(user) restart();
-    }
-    function nextSlide(){ go(idx+1,false); }
-    function prevSlide(){ go(idx-1,true); }
+    /* ====== HERO CAROUSEL ====== */
+    const track=document.getElementById('track'), dotsWrap=document.getElementById('dots'),
+          frame=document.getElementById('frame');
+    const slides=[...track.children]; let idx=0,timer=null,startX=null,dragging=false;
+    function buildDots(){ dotsWrap.innerHTML=''; slides.forEach((_,i)=>{const b=document.createElement('button'); b.className='dot'+(i===idx?' active':''); b.onclick=()=>go(i,true); dotsWrap.appendChild(b);}); }
+    function go(i,user){ idx=(i+slides.length)%slides.length; track.style.transform=`translateX(${-idx*100}%)`; [...dotsWrap.children].forEach((d,di)=>d.classList.toggle('active',di===idx)); if(user) restart(); }
+    function nextSlide(){ go(idx+1,false); } function prevSlide(){ go(idx-1,true); }
     function restart(){ clearInterval(timer); timer=setInterval(nextSlide,5000); }
-    document.getElementById('next').onclick=nextSlide;
-    document.getElementById('prev').onclick=prevSlide;
-    buildDots(); restart();
-
-    // Swipe (mobile-friendly)
+    document.getElementById('next').onclick=nextSlide; document.getElementById('prev').onclick=prevSlide; buildDots(); restart();
     frame.addEventListener('pointerdown', (e)=>{ startX=e.clientX; dragging=true; clearInterval(timer); frame.setPointerCapture(e.pointerId); });
-    frame.addEventListener('pointermove', (e)=>{ if(!dragging||startX==null) return; });
-    frame.addEventListener('pointerup', (e)=>{
-      if(!dragging) return;
-      const dx=e.clientX-startX;
-      const threshold=30;
-      if(dx>threshold) prevSlide(); else if(dx<-threshold) nextSlide(); else restart();
-      dragging=false; startX=null;
-    });
+    frame.addEventListener('pointerup', (e)=>{ if(!dragging) return; const dx=e.clientX-startX; const T=30; if(dx>T) prevSlide(); else if(dx<-T) nextSlide(); else restart(); dragging=false; startX=null; });
     frame.addEventListener('pointercancel', ()=>{ dragging=false; startX=null; restart(); });
 
-    // ===== CSV SECTIONS =====
+    /* ====== POSTER CAROUSEL (from Drive feed) ====== */
+    const DRIVE_FOLDER_ID = "1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH";
+    // GANTI dengan URL Web App milikmu (Apps Script), contoh: "https://script.google.com/macros/s/XXXX/exec?id=FOLDER_ID"
+    const DRIVE_FEED = "PASTE_WEB_APP_URL_DI_SINI?id="+DRIVE_FOLDER_ID;
+
+    const pTrack=document.getElementById('pTrack'), pDots=document.getElementById('pDots'), pFrame=document.getElementById('pFrame');
+    const pPrev=document.getElementById('pPrev'), pNext=document.getElementById('pNext');
+    let pIdx=0, pTimer=null, pStartX=null, pDragging=false;
+
+    function pBuildDots(){
+      const count = pTrack.children.length;
+      pDots.innerHTML='';
+      for(let i=0;i<count;i++){
+        const b=document.createElement('button');
+        b.className='dot'+(i===pIdx?' active':'');
+        b.onclick=()=>pGo(i,true);
+        pDots.appendChild(b);
+      }
+    }
+    function pGo(i,user){
+      const count = pTrack.children.length;
+      pIdx=(i+count)%count;
+      pTrack.style.transform=`translateX(${-pIdx*100}%)`;
+      [...pDots.children].forEach((d,di)=>d.classList.toggle('active',di===pIdx));
+      if(user) pRestart();
+    }
+    function pNextFn(){ pGo(pIdx+1,false); }
+    function pPrevFn(){ pGo(pIdx-1,true); }
+    function pRestart(){ clearInterval(pTimer); pTimer=setInterval(pNextFn,6000); }
+
+    pPrev.onclick=pPrevFn; pNext.onclick=pNextFn;
+    pFrame.addEventListener('pointerdown', (e)=>{ pStartX=e.clientX; pDragging=true; clearInterval(pTimer); pFrame.setPointerCapture(e.pointerId); });
+    pFrame.addEventListener('pointerup', (e)=>{ if(!pDragging) return; const dx=e.clientX-pStartX; const T=30; if(dx>T) pPrevFn(); else if(dx<-T) pNextFn(); else pRestart(); pDragging=false; pStartX=null; });
+    pFrame.addEventListener('pointercancel', ()=>{ pDragging=false; pStartX=null; pRestart(); });
+
+    async function loadPosters(){
+      try{
+        if(!/^https?:\/\//.test(DRIVE_FEED)) throw new Error('Feed belum diset');
+        const res = await fetch(DRIVE_FEED+"&_="+Date.now());
+        const {files=[]} = await res.json();
+        const items = files.filter(f=>/^image\//.test(f.mimeType)).slice(0,12);
+        if(!items.length) throw new Error('Tidak ada gambar');
+
+        pTrack.innerHTML = items.map(f=>`
+          <div class="slide">
+            <a href="${f.view || ('https://drive.google.com/file/d/'+f.id+'/view')}" target="_blank" rel="noopener" aria-label="${f.name}">
+              <img src="${f.url}" alt="${f.name}" loading="lazy" draggable="false">
+            </a>
+          </div>
+        `).join('');
+      }catch(err){
+        // Fallback: gunakan satu slide yang sudah ada (tidak apa), dots akan tetap dibuat.
+        console.warn('Poster feed fallback:', err.message);
+      }finally{
+        pIdx=0; pBuildDots(); pRestart();
+      }
+    }
+    loadPosters();
+
+    /* ====== CSV SECTIONS ====== */
     const ARTICLES="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=0&single=true&output=csv";
     const KAJIAN="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=450885199&single=true&output=csv";
     const INFO="https://docs.google.com/spreadsheets/d/e/2PACX-1vQiIOueuc-YygpdulT9x9ZjJUA2jlaWXu2uGzwgHcugNebW5HLjR66luq3kHmqDvTmNJlSjpjsIQ6PG/pub?gid=1656910010&single=true&output=csv";
@@ -257,18 +275,8 @@
       const header=(rows.shift()||[]).map(h=>h.trim().toLowerCase());
       return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
     }
-
     const pick=(o,keys)=>{for(const k of keys){const v=o[k];if(v&&v.trim()) return v;}return "";};
-    function directImage(u){
-      if(!u) return "";
-      if(/drive\.google\.com/.test(u)){
-        const m = u.match(/\/d\/([^/]+)/) || u.match(/[?&]id=([^&]+)/);
-        const id = m && m[1];
-        if(id) return `https://drive.google.com/uc?export=view&id=${id}`;
-      }
-      return u;
-    }
-
+    function directImage(u){ if(!u) return ""; if(/drive\.google\.com/.test(u)){ const m=u.match(/\/d\/([^/]+)/)||u.match(/[?&]id=([^&]+)/); const id=m&&m[1]; if(id) return `https://drive.google.com/uc?export=view&id=${id}`;} return u; }
     function render(list,id,fallback){
       const wrap=document.getElementById(id); wrap.innerHTML="";
       if(!list.length){wrap.innerHTML='<div class="card muted">'+fallback+'</div>';return;}
@@ -289,7 +297,6 @@
         wrap.appendChild(el);
       });
     }
-
     (async()=>{
       render(await fetchCSV(INFO),"updatesList","Belum ada info.");
       render(await fetchCSV(PENTING),"urgentList","Belum ada pengumuman.");
