@@ -197,8 +197,9 @@
 
     /* ====== POSTER CAROUSEL (from Drive feed) ====== */
     const DRIVE_FOLDER_ID = "1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH";
-    // GANTI dengan URL Web App milikmu (Apps Script), contoh: "https://script.google.com/macros/s/XXXX/exec?id=FOLDER_ID"
-    const DRIVE_FEED = "https://script.google.com/macros/s/AKfycbysSEyIHz3MSzJ20kjvbNMziMZrlEc6cMYELx9IRsmpTtHQHRPe864P7m_W7EgYN-Nagw/exec"+DRIVE_FOLDER_ID;
+    // GANTI URL di bawah dengan Web App milikmu jika berbeda:
+    const DRIVE_FEED_BASE = "https://script.google.com/macros/s/AKfycbysSEyIHz3MSzJ20kjvbNMziMZrlEc6cMYELx9IRsmpTtHQHRPe864P7m_W7EgYN-Nagw/exec";
+    const DRIVE_FEED = `${DRIVE_FEED_BASE}?id=${encodeURIComponent(DRIVE_FOLDER_ID)}`;
 
     const pTrack=document.getElementById('pTrack'), pDots=document.getElementById('pDots'), pFrame=document.getElementById('pFrame');
     const pPrev=document.getElementById('pPrev'), pNext=document.getElementById('pNext');
@@ -246,7 +247,6 @@
           </div>
         `).join('');
       }catch(err){
-        // Fallback: gunakan satu slide yang sudah ada (tidak apa), dots akan tetap dibuat.
         console.warn('Poster feed fallback:', err.message);
       }finally{
         pIdx=0; pBuildDots(); pRestart();
@@ -306,4 +306,3 @@
   </script>
 </body>
 </html>
-
