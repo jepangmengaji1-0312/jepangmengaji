@@ -40,8 +40,6 @@
     }
     .nav.open .nav-overlay{display:block}
     .nav.open .nav-links{display:flex}
-
-    /* Desktop nav */
     @media(min-width:1024px){
       .burger{display:none}
       .nav-overlay{display:none !important}
@@ -77,18 +75,27 @@
     .section h2{margin:0 0 10px}
     .cards{display:grid;grid-template-columns:1fr;gap:12px}
     @media(min-width:720px){.cards{grid-template-columns:repeat(2,1fr)}}
-    .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px}
+    .card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:12px;box-shadow:var(--shadow)}
     .card img{width:100%;border-radius:8px;margin-bottom:8px;display:block;object-fit:cover;max-height:380px}
     .muted{color:var(--muted)}
 
     footer{border-top:1px solid var(--border);padding:20px 0;color:var(--muted);text-align:center}
 
-    /* === Poster (Google Drive folder embed) === */
+    /* === Poster (Google Drive embed, diperkecil & ada caption) === */
+    #poster .poster-card{max-width:880px;margin:0 auto}
     .gdrive{
       width:100%;
-      height:min(80vh,720px);
+      height:360px;              /* ↓ kecil di HP */
       border:0;
       border-radius:12px;
+    }
+    @media(min-width:720px){ .gdrive{height:440px;} }   /* ↓ sedikit lebih tinggi di tablet */
+    @media(min-width:1024px){ .gdrive{height:480px;} }  /* ↓ desktop */
+    .poster-caption{
+      margin-top:10px;
+      font-size:14px;
+      color:var(--muted);
+      line-height:1.5;
     }
   </style>
 </head>
@@ -104,7 +111,7 @@
         <span></span>
       </button>
 
-      <!-- Links (dipakai untuk desktop & jadi drawer di mobile) -->
+      <!-- Links (desktop & drawer mobile) -->
       <div class="nav-links" id="navLinks" role="menu">
         <a class="btn" href="#updates" role="menuitem">Info Terbaru</a>
         <a class="btn" href="#urgent" role="menuitem">Penting</a>
@@ -144,16 +151,21 @@
         </div>
       </section>
 
-      <!-- POSTER (folder Google Drive) -->
+      <!-- POSTER (folder Google Drive, embed diperkecil + teks bawah) -->
       <section id="poster" class="section">
         <h2>Poster</h2>
-        <div class="card">
+        <div class="card poster-card">
           <iframe
             class="gdrive"
             src="https://drive.google.com/embeddedfolderview?id=1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH#grid"
             loading="lazy"
             referrerpolicy="no-referrer"
+            title="Galeri Poster"
           ></iframe>
+          <p class="poster-caption">
+            Catatan: klik poster untuk membuka ukuran penuh. Tambahkan teks apa pun di sini—misalnya
+            <em>“Open donasi program Dauroh Fuyu Jepang Mengaji. Silakan sebar ke kawan-kawan.”</em>
+          </p>
         </div>
       </section>
 
@@ -176,20 +188,11 @@
     const navLinks = document.getElementById('navLinks');
     const navOverlay = document.getElementById('navOverlay');
 
-    function closeNav(){
-      nav.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }
-    function openNav(){
-      nav.classList.add('open');
-      burger.setAttribute('aria-expanded','true');
-    }
-    burger.addEventListener('click',()=>{
-      if(nav.classList.contains('open')) closeNav(); else openNav();
-    });
+    function closeNav(){ nav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+    function openNav(){ nav.classList.add('open'); burger.setAttribute('aria-expanded','true'); }
+    burger.addEventListener('click',()=>{ nav.classList.contains('open') ? closeNav() : openNav(); });
     navOverlay.addEventListener('click', closeNav);
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeNav(); });
-    // Tutup drawer saat salah satu link diklik (mobile)
     navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeNav));
 
     // ===== SLIDESHOW =====
@@ -255,10 +258,7 @@
       return rows.map(r=>Object.fromEntries(header.map((h,i)=>[h,(r[i]||'').trim()])));
     }
 
-    // Helper: ambil nilai pertama yang ada
     const pick=(o,keys)=>{for(const k of keys){const v=o[k];if(v&&v.trim()) return v;}return "";};
-
-    // Helper: konversi link Google Drive jadi direct image
     function directImage(u){
       if(!u) return "";
       if(/drive\.google\.com/.test(u)){
