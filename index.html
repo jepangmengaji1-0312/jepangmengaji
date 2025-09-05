@@ -154,7 +154,7 @@
             </div>
           </div>
           <p class="poster-caption" id="posterNote">
-            Tambahkan teks apa pun di sini, misalnya <em>“Open donasi Dauroh Fuyu. Silakan bantu sebar poster ini.”</em>
+            Untuk ihwah yang berkeluangan silahkan untuk <em>“Open donasi Dauroh Fuyu. Silakan bantu sebar poster ini.”</em>
           </p>
         </div>
       </section>
@@ -197,7 +197,6 @@
 
     /* ====== POSTER CAROUSEL (from Drive feed) ====== */
     const DRIVE_FOLDER_ID = "1WJoNkSthbw1JZSdDp8d2bAVlXYvbCpaH";
-    // GANTI URL di bawah dengan Web App milikmu jika berbeda:
     const DRIVE_FEED_BASE = "https://script.google.com/macros/s/AKfycbysSEyIHz3MSzJ20kjvbNMziMZrlEc6cMYELx9IRsmpTtHQHRPe864P7m_W7EgYN-Nagw/exec";
     const DRIVE_FEED = `${DRIVE_FEED_BASE}?id=${encodeURIComponent(DRIVE_FOLDER_ID)}`;
 
@@ -239,13 +238,20 @@
         const items = files.filter(f=>/^image\//.test(f.mimeType)).slice(0,12);
         if(!items.length) throw new Error('Tidak ada gambar');
 
-        pTrack.innerHTML = items.map(f=>`
-          <div class="slide">
-            <a href="${f.view || ('https://drive.google.com/file/d/'+f.id+'/view')}" target="_blank" rel="noopener" aria-label="${f.name}">
-              <img src="${f.url}" alt="${f.name}" loading="lazy" draggable="false">
-            </a>
-          </div>
-        `).join('');
+        // Pakai endpoint thumbnail (stabil untuk <img>), fallback ke uc?export=view saat gagal load
+        pTrack.innerHTML = items.map(f=>{
+          const thumb = `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200`;
+          const direct = f.url || `https://drive.google.com/uc?export=view&id=${f.id}`;
+          return `
+            <div class="slide">
+              <a href="${f.view || ('https://drive.google.com/file/d/'+f.id+'/view')}" target="_blank" rel="noopener" aria-label="${f.name}">
+                <img src="${thumb}" alt="${f.name}" loading="lazy" decoding="async" draggable="false"
+                     referrerpolicy="no-referrer"
+                     onerror="this.onerror=null; this.src='${direct}';">
+              </a>
+            </div>
+          `;
+        }).join('');
       }catch(err){
         console.warn('Poster feed fallback:', err.message);
       }finally{
