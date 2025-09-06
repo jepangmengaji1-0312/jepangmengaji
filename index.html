@@ -23,6 +23,7 @@
     .brand img{width:36px;height:36px;border-radius:8px;border:1px solid var(--border)}
     .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px}
     .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn.block{width:100%;justify-content:center}
 
     /* Burger */
     .burger{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;border:1px solid var(--border);background:#fff}
@@ -105,6 +106,9 @@
         <a class="btn" href="#poster" role="menuitem">Poster</a>
         <a class="btn" href="#artikel" role="menuitem">Artikel</a>
         <a class="btn" href="#kajian" role="menuitem">Kajian</a>
+        <!-- BARU: menu Donasi + Konfirmasi -->
+        <a class="btn" href="donasi.html" role="menuitem">Donasi</a>
+        <a class="btn" href="konfirmasi.html" role="menuitem">Konfirmasi</a>
         <a class="btn primary" href="https://www.youtube.com/@JepangMengaji" target="_blank" role="menuitem" rel="noopener">Arsip YouTube</a>
       </div>
     </div>
@@ -121,6 +125,8 @@
         <a href="#artikel">📖 Artikel</a>
         <a href="#kajian">📚 Kajian</a>
         <a href="#donasi">❤️ Donasi</a>
+        <!-- BARU: link langsung ke halaman konfirmasi di repo -->
+        <a href="konfirmasi.html">📨 Konfirmasi Donasi</a>
       </div>
     </aside>
 
@@ -170,6 +176,23 @@
       <section id="urgent" class="section"><h2>Pengumuman Penting</h2><div id="urgentList" class="cards"></div></section>
       <section id="artikel" class="section"><h2>Artikel</h2><div id="articlesList" class="cards"></div></section>
       <section id="kajian" class="section"><h2>Kajian</h2><div id="kajianList" class="cards"></div></section>
+
+      <!-- BARU: SECTION DONASI + KONFIRMASI -->
+      <section id="donasi" class="section">
+        <h2>Donasi</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Dukung Kegiatan Jepang Mengaji</h3>
+            <p class="muted">Ingin ikut berkontribusi? Silakan menuju halaman donasi untuk rincian rekening dan cara berdonasi.</p>
+            <a class="btn primary" href="donasi.html">Buka Halaman Donasi</a>
+          </article>
+          <article class="card">
+            <h3>Konfirmasi Donasi</h3>
+            <p class="muted">Sudah transfer? Agar tercatat dengan benar, mohon lakukan konfirmasi melalui halaman berikut.</p>
+            <a class="btn" href="konfirmasi.html">Ke Halaman Konfirmasi</a>
+          </article>
+        </div>
+      </section>
     </main>
   </div>
 
